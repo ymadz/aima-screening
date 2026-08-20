@@ -1,80 +1,108 @@
 # AIMA Screening
 
-Development environment for the anemia screening experiments described in Table 8.
+Multimodal anemia-screening research pipeline using CIE L*a*b* colorimetry,
+cutaneous ITA, MobileNetV3-Small visual embeddings, and LightGBM.
 
-## Setup
+## Project layout
 
-Python 3.10 is required for the dedicated environment:
+```text
+aima-screening/
+├── aima_env/                 # Local Python 3.10 environment, ignored by Git
+├── data/raw/                 # Kaggle images and country workbooks
+├── data/processed/           # Fused feature tables
+├── results/                  # OOF predictions and audit artifacts
+├── src/
+│   ├── preprocess.py         # CIE L*a*b* and ITA calculations
+│   ├── feature_extractor.py  # MobileNetV3-Small embeddings
+│   ├── dataset_builder.py    # Metadata join and multimodal fusion
+│   ├── train_classifier.py   # LightGBM 10-fold CV
+│   └── evaluate.py           # Cohort metrics and ANOVA
+├── requirements.txt
+├── MODEL_CARD.md
+└── FINDINGS_AND_EVALUATION.md
+```
+
+## Environment setup
+
+Python 3.10 is required. On macOS with Homebrew:
 
 ```bash
-python3.10 -m venv aima_env
+brew install python@3.10 libomp
+/opt/homebrew/bin/python3.10 -m venv aima_env
 source aima_env/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-On Windows, activate with `aima_env\\Scripts\\activate`.
+On Windows, create the environment with `py -3.10 -m venv aima_env` and activate
+with `aima_env\\Scripts\\activate`.
 
-## Kaggle dataset
+## Dataset setup
 
-Create a Kaggle API token in your account settings and place the downloaded file at `~/.kaggle/kaggle.json` on macOS/Linux. Then run:
+Create a Kaggle API token at https://www.kaggle.com/settings. Store the token
+outside this repository. The Kaggle CLI accepts either the legacy JSON file or
+the current access-token file:
 
 ```bash
+mkdir -p ~/.kaggle
+# Place kaggle.json at ~/.kaggle/kaggle.json, then:
 chmod 600 ~/.kaggle/kaggle.json
+
+cd /path/to/aima-screening
+source aima_env/bin/activate
 kaggle datasets download -d harshwardhanfartale/eyes-defy-anemia
 unzip eyes-defy-anemia.zip -d data/raw/
+rm eyes-defy-anemia.zip
 ```
 
-Keep credentials out of this repository. The raw and processed data directories are ignored by Git.
+The downloaded data is organized as `data/raw/dataset anemia/<country>/<number>`
+with `India.xlsx` and `Italy.xlsx` metadata. Do not commit credentials, raw data,
+or generated feature tables.
 
-## Layout   
+## Run the pipeline
 
-- `data/raw/`: downloaded Kaggle images
-- `data/processed/`: segmented ROIs and extracted features
-- `src/preprocess.py`: CIE L*a*b* conversion and ITA calculation
-- `src/feature_extractor.py`: MobileNet/InceptionV3 feature extraction
-- `src/train_classifier.py`: LightGBM training and 10-fold CV
-- `src/evaluate.py`: sensitivity, specificity, MAE, and ANOVA evaluation
-
-## Build the multimodal dataset
-
-The downloaded dataset stores subjects under country and numeric ID folders. The
-builder joins those folders to the country workbooks, uses the canonical
-`*_palpebral.png` ROI for color and MobileNet features, and uses the matching
-full JPG for the cutaneous ITA estimate:
+Build one fused row per valid canonical palpebral ROI:
 
 ```bash
-source aima_env/bin/activate
 python src/dataset_builder.py
 ```
 
-This writes `data/processed/dataset.csv`. Labels are derived from hemoglobin
-using `< 12 g/dL` for females and `< 13 g/dL` for males. Rows without a numeric
-hemoglobin value or a matching ROI/full image pair are skipped.
+This joins country and numeric subject folders to the workbooks, derives labels
+from hemoglobin (`< 12 g/dL` for females and `< 13 g/dL` for males), computes
+ITA from the full JPG skin margin, and writes `data/processed/dataset.csv`.
 
-## Train the LightGBM baseline
-
-Run the 10-fold stratified cross-validation pipeline after building the dataset:
+Train and generate out-of-fold predictions:
 
 ```bash
 python src/train_classifier.py
 ```
 
-The model uses 583 numeric inputs: ITA, six LAB statistics, and 576 MobileNet
-embeddings. Identifiers and clinical metadata are retained for analysis but are
-excluded from training to prevent target leakage. Out-of-fold probabilities and
-labels are saved to `results/cross_validation_predictions.csv`.
-
-## Evaluate skin-tone cohorts
-
-Run subgroup metrics and the one-way ANOVA fairness check on the out-of-fold
-predictions:
+Evaluate ITA cohorts and run the ANOVA diagnostic:
 
 ```bash
 python src/evaluate.py
 ```
 
-The current dataset contains 182 `Brown / Dark` subjects and only 2 `Very
-Light` subjects, with no observations in the other ITA bands. The resulting
-ANOVA is therefore underpowered; a p-value above 0.05 means only that the null
-hypothesis was not rejected, not that demographic neutrality has been proven.
+Outputs are `results/cross_validation_predictions.csv` and the independently
+generated `results/feature_gain_importance.csv`.
+
+## Plan A and Plan B
+
+**Plan A: multimodal fusion.** Use the canonical palpebral ROI, six LAB
+statistics, cutaneous ITA, and 576 MobileNet features as the 583 LightGBM
+inputs. This is the primary thesis pipeline and the configuration used for the
+reported baseline.
+
+**Plan B: controlled fallback.** If a deployment site lacks a matching full JPG
+for the ITA skin patch or has incompatible metadata, retain only rows with
+verified labels and use the available ROI features, while reporting the missing
+modality and evaluating it as a separate experiment. Do not replace missing
+labels with guessed values or compare Plan B results directly with Plan A
+without a protocol change.
+
+## Current status
+
+The verified dataset contains 184 unique country-subject pairs and 583 numeric
+model inputs. The baseline and audit results are summarized in
+[FINDINGS_AND_EVALUATION.md](FINDINGS_AND_EVALUATION.md), with model limitations
+and deployment claims in [MODEL_CARD.md](MODEL_CARD.md).
