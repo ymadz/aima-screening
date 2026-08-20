@@ -1,0 +1,8 @@
+aima_env/
+__pycache__/
+*.py[cod]
+
+.kaggle/
+data/raw/*
+data/processed/*
+.DS_Store
