@@ -62,6 +62,9 @@ missing file. Do not rewrite the public originals.
 
 ## Local manual annotation inventory
 
+The following table records the **initial audit snapshot**. The live folder
+changed during this task; see the follow-up below before using these counts.
+
 | Modality | Frozen image references and TIFFs | Registered approved ROI/mask pairs | Saved but unregistered ROIs | No saved anatomical ROI |
 |---|---:|---:|---:|---:|
 | Eyelid | 140 | 22 | 9 | 109 |
@@ -91,6 +94,22 @@ files end `_nail_plate_mask.roi`, whereas the documented convention is
 review ledger entries, or manifest statuses were created from these 18 during
 this audit.
 
+### Follow-up after additional manual annotation
+
+The user added 49 more eyelid ROIs after the initial inventory. A fresh
+read-only check found 80 eyelid ROI files and 19 nail ROI files in the active
+workspace. The 32 approved ROI/mask pairs remain unchanged. The current
+unregistered set is 58 eyelid and nine nail ROIs (67 total), leaving 60 eyelid
+and 116 nail images with no saved ROI. All 67 unregistered files map uniquely
+to pending TIFFs, and all 67 passed the Fiji rasterizer's structural dry-run.
+The 49 new eyelid overlays were checked together at contact-sheet scale for
+gross target placement; no obvious wrong-image overlay was seen, but this is
+not per-boundary approval. Two eyelid ROI areas (one older, one newer) fall
+outside a simple 0.15%–2.00% full-frame attention band and merit closer
+review. The canonical manifest still has 243 pending rows because new ROIs are
+not discovered or registered automatically. No new anatomical masks or
+approved statuses were created by this follow-up.
+
 The approved local eyelid masks cover 0.19%–1.71% of their full TIFFs
 (median 0.75%); new eyelid polygons are broadly similar in scale. Public masks
 cover a much larger fraction of their tighter eye photos (median 4.96%), so
@@ -106,6 +125,15 @@ anatomical conventions.
 - No U-Net, LinkNet, SAM 2.1, public segmentation train/validation/test split, local fine-tuning, or unified predicted/verified manifest updater was found. `torch` 2.13.0, `torchvision` 0.28.0, OpenCV, Pillow, and tifffile are installed in `aima_env`; `sam2`, `roifile`, and `segmentation_models_pytorch` are not. The current interpreter reports `torch.backends.mps.is_available() == False` despite an MPS-enabled build, so use CPU fallback unless an actual MPS smoke test succeeds.
 - A local Fiji environment contains an older SAM 2 tiny checkpoint, **not** a verified SAM 2.1 checkpoint. Do not label it 2.1 or silently substitute it. Meta's official SAM 2 repository lists a separate 2.1 tiny checkpoint and requires Python ≥3.10 and PyTorch ≥2.5.1.
 - The annotation TIFFs are suitable for geometry review, but the documented Display-P3-preview/sRGB-tag mismatch in some DNG-derived nail TIFFs blocks unqualified calibrated CIELAB comparisons. Resolve color management before claiming color-feature equivalence. Glare is an independent QC layer; rejected/unreviewed glare candidates are not anatomical truth.
+
+After the first audit commit, `src/validate_public_segmentation.py` validated
+all 218 public pairs and wrote 218 binary derivatives plus a source-hash ledger
+under ignored `data/processed/segmentation/public_palpebral_v2/`. Its
+summary contains all four conservative near-duplicate candidates. The earlier
+`public_palpebral_v1/` exploratory output used a different pHash threshold
+calculation and is superseded; its binary masks were the same, but its
+similarity list is incomplete. A direct hardware check outside the filesystem
+sandbox reported MPS available; training may use MPS there, with CPU fallback.
 
 ## Gates and next controlled stage
 
