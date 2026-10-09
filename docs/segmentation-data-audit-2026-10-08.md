@@ -142,6 +142,18 @@ sandbox reported MPS available; training may use MPS there, with CPU fallback.
 3. **Local transfer gate: evaluation only.** Reserve local evaluation subjects before any fine-tuning, compare public-model predictions with the 22 registered eyelid masks, and report Dice/IoU plus anatomical failures. The 18 unregistered ROIs are not ground truth until rasterized, boundary-reviewed, and registered.
 4. **SAM and nail gate: blocked on runtime/review.** Confirm a genuine SAM 2.1 checkpoint and local runtime before building assisted correction. Do not mark proposals verified or update the canonical manifest without human review and a safe registration path. Keep nail and eyelid models separate.
 
+## Follow-up — 2026-10-09
+
+The above section records the state of the audit on 2026-10-08. Subsequent work
+installed and smoke-tested the official local SAM 2.1 Tiny checkpoint, trained
+and evaluated the public palpebral U-Net baseline, tested local eyelid transfer,
+and ran a separate nail-plate prompt/refinement pilot. See
+[`docs/sam2-nail-pilot-2026-10-09.md`](sam2-nail-pilot-2026-10-09.md) for
+SAM-specific methods and results. The nail candidate batch is not ground truth;
+the canonical manifest remains unchanged. The current nail proposal experiment
+does not unblock the local eyelid segmentation failure or local anemia-model
+readiness.
+
 The model architecture and methodological choices requested in the current task
 are implementation directions, not achieved results. The original U-Net paper
 motivates augmentation for small biomedical datasets
