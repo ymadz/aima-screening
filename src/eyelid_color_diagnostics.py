@@ -73,5 +73,5 @@ def diagnose(source_root: Path, output: Path, preflight: Path) -> dict:
     lines+=['','## Limitations and supported investigations','', 'The 12 missed cases are not an independent tuning set. Group differences are conditioned on predictions learned from these same development subjects. Seven detected cases are too few for reliable causal or subgroup conclusions. Hb distances describe borderline labels without changing them. Compare managed color with original features to isolate ICC effects; compare limited robust/region features to investigate whether averages discard useful tissue-color variation. Do not exclude or relabel difficult subjects. No poor-quality causal explanation is established from these proxies. Missing color-chart and capture-standardization evidence prevents accurate retrospective camera calibration.','', 'The private contact sheet shows all 19 approved anatomical crops in original stored color, for visual review without source filenames or direct identifiers.']
     with (out/'diagnostic_report_private.md').open('x') as f:f.write('\n'.join(lines)+'\n')
     print(json.dumps({'groups':frame.group.value_counts().to_dict(),'summary':summary,'profile_corrections':int((frame.color_changed_pixels>0).sum())},allow_nan=False))
-    
+
     return summary
