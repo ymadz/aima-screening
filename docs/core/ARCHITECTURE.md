@@ -164,3 +164,5 @@ Standalone hybrid verification matches training's single-thread PyTorch/native-p
 ## Experiment 3 input preparation (implemented, 2026-10-11)
 
 `src/eyelid_transfer_data.py` adds independent read-only public/local source access, conservative adult Hb harmonization, manual-mask registration, profile conversion, public grouped train/validation assignment, cross-domain duplicate checks and private tensor preparation. Original experiments and LAB features remain immutable. See [Experiment 3 contract](../experiments/eyelid-exp03-transfer.md). Neural training results are not yet available.
+
+Experiment 3 also implements deterministic CPU binary MobileNetV3 public pretraining and head/late-layer transfer in `src/eyelid_transfer_neural.py`. Frozen ImageNet prefix maps are cached without fitting; BatchNorm statistics remain fixed. Best/last checkpoints and resume guards are private. See the Experiment 3 contract for prespecified hyperparameters.
