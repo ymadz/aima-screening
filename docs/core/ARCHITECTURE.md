@@ -176,3 +176,8 @@ Experiment 3 public grouping now conservatively combines original-JPEG and align
 ## Experiment 3 verified outcome (2026-10-11)
 
 Public pretraining completed on 183 eligible subjects, with 146/37 grouped train/validation. Local A/B and training-selected strategy completed on the original 119 subjects/five outer folds. Selected transfer detected 1/19 anemia subjects at 84% specificity (ROC-AUC0.464/AP0.144), compared with7/19 at 84% for the separate nested historical LAB threshold analysis (ROC-AUC0.719/AP0.388). Public-only detected0/19. This design did not improve detection or justify added complexity. Original Experiment1/2 artifacts remain unchanged. All 41 neural/20 LAB models, 216 checksum-covered files, exact source/cache reproduction and independent pooled/per-fold metric checks passed. Results are internal CV with 19 positives and no classifier holdout. See the Experiment 3 results report for preprocessing differences and conditional uncertainty.
+
+
+## Experiment 4 — color optimization implementation (2026-10-12)
+
+The owner authorized independent local manual-eyelid diagnostics and classical classification, with the same verified 119 subjects and five development folds. `src/eyelid_color_diagnostics.py` provides private pseudonymous FN/TP/Hb, native quality-proxy and rendering summaries without altering sources. `src/eyelid_color_data.py` implements original and ICC-managed aligned TIFF input policies, native masked quantized LAB and bounded six/eighteen/twenty-one-value feature sets. Glare is retained. No classification fitting or new performance result is recorded by this input implementation. See [the frozen Experiment 4 design](../experiments/eyelid-exp04-color.md); old experiments remain immutable.
