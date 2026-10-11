@@ -2,6 +2,16 @@
 
 Research pipeline for screening anemia from conjunctival images and patient metadata.
 
+## Core project documents
+
+- [Architecture essentials](docs/core/ARCHITECTURE_ESSENTIALS.md) — invariants every agent must preserve.
+- [PRD](docs/core/PRD.md) — goals, requirements, intended use, and current scope.
+- [Architecture](docs/core/ARCHITECTURE.md) — verified data/model flows and implementation status.
+- [Project log](docs/core/PROJECT_LOG.md) — dated decisions, experiments, results, and blockers.
+- [Agent guide](AGENTS.md) — required reading order, source-of-truth rules, privacy, and verification expectations.
+- [Documentation index](docs/README.md) — map of core, model, workflow, experiment, audit, and policy documents.
+- Supporting references: [model card](docs/models/MODEL_CARD.md), [findings and evaluation](docs/models/FINDINGS_AND_EVALUATION.md), [local photo import](docs/workflows/LOCAL_PHOTO_IMPORT.md), and [local annotation workflow](docs/workflows/local-annotation-workflow.md).
+
 ## Preview
 
 - Live demo: [add live demo link]
@@ -158,6 +168,12 @@ The main generated files are:
 ## Project Status
 
 This is a student research prototype, not a clinical product. The public inner-eyelid baseline has internal 10-fold cross-validation results. A separate local manual-eyelid LAB classifier completed fixed five-fold subject cross-validation on 119 eligible subjects (19 anemia, 100 non-anemia) on 2026-10-10 after source, mask and owner duplicate-review gates passed. At the fixed 0.5 research threshold it detected only 2 of 19 anemia subjects; its 84.9% accuracy largely reflects class imbalance. Local color rendering remains mixed and uncalibrated, and there is no untouched classifier holdout or external clinical validation. See the [local classifier guide](docs/experiments/local-eyelid-classifier.md), [PRD](docs/core/PRD.md) and [architecture](docs/core/ARCHITECTURE.md) for scope and limits.
+
+## Local Annotation Workspace
+
+Local eyelid and fingernail annotation work is consolidated in one ignored, private folder: `data/raw/local/annotations/`. Its canonical `annotation_manifest.csv` links each metadata `subject_id` and original filename to the unchanged source in `data/raw/local/incoming/`, the standardized annotation TIFF, the Fiji ROI, and the binary mask. Use `pending_annotation_queue.csv` for the complete prioritized manual-annotation queue; the Batch 1 and Batch 2 folders are no longer active workspaces. See the [local annotation workflow](docs/workflows/local-annotation-workflow.md).
+
+Manual anatomical ROIs and reviewed masks are the primary ground truth. Automated proposals are optional experiments only. The latest per-image inventory, glare caveats, review checks, and exact queue are in the local `data/raw/local/annotations/README.md` and its manifest CSVs. These local patient-derived assets are ignored by Git and must not be committed or shared outside the approved research workspace. No local model has been trained by the annotation audit.
 
 ## Acknowledgements
 

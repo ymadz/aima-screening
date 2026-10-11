@@ -10,7 +10,7 @@ manual ROI, or approved mask was modified during this audit.
 - Local metadata authority: `data/raw/local/metadata/frozen_2026-10-07/AIMA Patients Metadata - Sheet1 values.csv`, modified `2026-10-07 14:55:39 +0800`, SHA-256 `1e704fb8d575757f16fc4f690cdc3315bc4063a5cf258d6c2e1b5f784d19596d`. Adjacent `provenance.json` records the same source hash. The owner's non-pregnancy attestation is outside the Sheet.
 - Public source in this checkout: `data/raw/dataset anemia/{India,Italy}/`, identified by the project as Eyes Defy Anemia. Country workbook IDs match the numbered subject directories. A public subject key must include the country because number alone is not unique across countries.
 - Local annotation authority: `data/raw/local/annotations/manifests/annotation_manifest.csv` and its pending queue. The builder reads a registered inventory; a newly saved ROI does not become approved merely by existing on disk.
-- The separate `eyelid-seg-v1` rules mentioned in the task were not found in this repository; the current repository annotation README and `docs/local-annotation-workflow.md` are the available anatomical instructions. This is a documentation gap, not permission to change boundaries.
+- The separate `eyelid-seg-v1` rules mentioned in the task were not found in this repository; the current repository annotation README and `docs/workflows/local-annotation-workflow.md` are the available anatomical instructions. This is a documentation gap, not permission to change boundaries.
 
 ## Public palpebral pairs
 
@@ -148,7 +148,7 @@ The above section records the state of the audit on 2026-10-08. Subsequent work
 installed and smoke-tested the official local SAM 2.1 Tiny checkpoint, trained
 and evaluated the public palpebral U-Net baseline, tested local eyelid transfer,
 and ran a separate nail-plate prompt/refinement pilot. See
-[`docs/sam2-nail-pilot-2026-10-09.md`](sam2-nail-pilot-2026-10-09.md) for
+[`docs/experiments/sam2-nail-pilot-2026-10-09.md`](../experiments/sam2-nail-pilot-2026-10-09.md) for
 SAM-specific methods and results. The nail candidate batch is not ground truth;
 the canonical manifest remains unchanged. The current nail proposal experiment
 does not unblock the local eyelid segmentation failure or local anemia-model
