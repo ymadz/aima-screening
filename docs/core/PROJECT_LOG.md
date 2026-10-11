@@ -185,3 +185,8 @@ Chronological record of meaningful implementation, data, methodology, and readin
 - Completed eight coherent commits for previously implemented data, annotation, rendering, segmentation, public evaluation, local CIELAB classification and documentation work. The completed Q&A documentation changes were committed after explicit owner approval; its separate worktree documents remain untouched.
 - Added a private archive creator and read-only verifier that reproduce ten saved fold models without fitting. Historical output/readiness hashes remain unchanged. Archive creation and verification are required before Experiment 2 begins; the archive procedure and cleanup commit list are documented in `docs/experiments/eyelid-exp01-preservation.md`.
 - Validation: 51 synthetic tests, source compilation, fresh 560-file data audit and original saved-model reproduction passed. No private data were committed or uploaded.
+
+## 2026-10-11 — Experiment 1 archived; isolated hybrid feature path implemented
+
+- Verified the separate owner-only Experiment 1 archive: 97 files, all checksums valid, all ten models reproduced without refitting, original output/readiness bytes unchanged. Preservation branch/tag resolve to `4bf6e2577d02b5e3338e1937140b7eaff31369b4`. Created native linked worktree `../aima-screening-exp02-hybrid` on `experiment/eyelid-exp02-hybrid` from that milestone. No large data were duplicated.
+- Implemented frozen ImageNet1K_V1 manual-mask MobileNet embeddings and exact baseline LAB reuse, explicit external source-root and exclusive ignored output guards. Documented the prespecified two-candidate nested design before any hybrid training/outer scoring. No local neural fitting, nails, automated masks or public anemia data are involved.

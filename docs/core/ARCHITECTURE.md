@@ -154,3 +154,7 @@ Within each experiment, fit preprocessing/feature selection only on training fol
 ## 5. Privacy, reproducibility, and artifact boundaries
 
 `data/raw/` and patient-level processed outputs are private/ignored. Do not add raw images, ID cards, subject-level metadata, ROI/mask images, or patient-level predictions to Git. Derived manifests retain canonical source path/hash and subject/original-name links. Record a new experiment's code/config, random seeds, cohort hash, split definition, evaluation scope, results, limitations, and next action in `docs/core/PROJECT_LOG.md`; update this architecture only when implementation or an approved design actually changes.
+
+### Isolated hybrid Experiment 2 (2026-10-11)
+
+`src/local_eyelid_hybrid_features.py` implements read-only external source access, baseline/source verification, unchanged full-resolution LAB features and 576 frozen MobileNetV3-Small ImageNet1K_V1 embeddings from approved manually masked ROI tensors. The outside-mask background is mean-filled before interpolation; aspect-preserving 224-square letterboxing retains the annotated tissue. Model normalization is versioned separately from the unchanged LAB path. Hybrid nested fitting/evaluation is prespecified and not yet executed at this implementation milestone. See [the Experiment 2 guide](../experiments/eyelid-exp02-hybrid.md).
