@@ -170,3 +170,5 @@ Experiment 3 also implements deterministic CPU binary MobileNetV3 public pretrai
 Experiment 3 execution and evaluation are implemented in `eyelid_transfer_run.py` and `eyelid_transfer_evaluation.py`: public-only inference, two local strategies with three-fold inner selection and outer refits, a separate nested historical LAB threshold comparison, paired conditional uncertainty, private checkpoints and checksum-based reproduction. Full training has not yet completed.
 
 Experiment 3 public grouping now conservatively combines original-JPEG and aligned-raster perceptual screens; a prepared-cohort execution gate verifies the union and exact assignments before fitting.
+
+`eyelid_transfer_reproduce.py` is the completed Experiment 3 reproduction entrypoint. It verifies the recorded original implementation, sealed artifacts and exact batch-16 prefix recomputation, avoiding false mismatch flags from batch-dependent float32 convolution. Training artifacts are immutable.
