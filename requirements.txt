@@ -4,6 +4,7 @@ torchvision>=0.15.0
 opencv-python>=4.8.0
 scikit-image>=0.21.0
 pillow>=10.0.0
+tifffile>=2023.7.0  # decode the embedded JPEG preview in local Apple DNG files
 
 # Tabular GBDT Classifier & Statistics (Table 8)
 lightgbm>=4.0.0
