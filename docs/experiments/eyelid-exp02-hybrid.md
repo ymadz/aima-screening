@@ -23,4 +23,4 @@ The mixed rendering histories, uncalibrated color, only 19 positive cases, mask-
 
 Official technical references: [Torchvision MobileNetV3-Small weights and normalization](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.mobilenet_v3_small.html), [LightGBM parameters](https://lightgbm.readthedocs.io/en/stable/Parameters.html). The run records the installed versions rather than assuming the latest documentation version.
 
-Current implementation milestone: deterministic masked feature extraction and source/output guards are implemented; hybrid fitting and evaluation follow in a separate feature commit.
+Current implementation milestone: deterministic masked feature extraction, source/output guards, nested hybrid fitting, training-only candidate/threshold selection and conditional paired evaluation are implemented. The private run/artifact verifier follows separately; real hybrid training has not yet run.

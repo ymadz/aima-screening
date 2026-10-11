@@ -190,3 +190,8 @@ Chronological record of meaningful implementation, data, methodology, and readin
 
 - Verified the separate owner-only Experiment 1 archive: 97 files, all checksums valid, all ten models reproduced without refitting, original output/readiness bytes unchanged. Preservation branch/tag resolve to `4bf6e2577d02b5e3338e1937140b7eaff31369b4`. Created native linked worktree `../aima-screening-exp02-hybrid` on `experiment/eyelid-exp02-hybrid` from that milestone. No large data were duplicated.
 - Implemented frozen ImageNet1K_V1 manual-mask MobileNet embeddings and exact baseline LAB reuse, explicit external source-root and exclusive ignored output guards. Documented the prespecified two-candidate nested design before any hybrid training/outer scoring. No local neural fitting, nails, automated masks or public anemia data are involved.
+
+## 2026-10-11 — Nested hybrid training and paired evaluation implemented
+
+- Added fold-local embedding scaling/eight-component PCA and conservative LightGBM, with exactly two class-weight settings chosen by three-fold inner OOF AP. Selected research thresholds use inner scores only (maximum sensitivity at specificity ≥0.80); the selection API does not accept outer validation labels. No outer early stopping or retuning is used.
+- Added fixed/fold-selected metrics and conditional paired stratified bootstrap comparisons against the unchanged baseline. Synthetic tests check training-only statistics, partition exclusivity, model-loading equality, selection invariance to outer features, threshold ties and hand-calculated metrics. Real hybrid training remains pending the artifact runner.
