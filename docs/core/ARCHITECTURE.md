@@ -168,3 +168,5 @@ Standalone hybrid verification matches training's single-thread PyTorch/native-p
 Experiment 3 also implements deterministic CPU binary MobileNetV3 public pretraining and head/late-layer transfer in `src/eyelid_transfer_neural.py`. Frozen ImageNet prefix maps are cached without fitting; BatchNorm statistics remain fixed. Best/last checkpoints and resume guards are private. See the Experiment 3 contract for prespecified hyperparameters.
 
 Experiment 3 execution and evaluation are implemented in `eyelid_transfer_run.py` and `eyelid_transfer_evaluation.py`: public-only inference, two local strategies with three-fold inner selection and outer refits, a separate nested historical LAB threshold comparison, paired conditional uncertainty, private checkpoints and checksum-based reproduction. Full training has not yet completed.
+
+Experiment 3 public grouping now conservatively combines original-JPEG and aligned-raster perceptual screens; a prepared-cohort execution gate verifies the union and exact assignments before fitting.

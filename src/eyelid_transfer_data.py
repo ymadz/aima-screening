@@ -18,7 +18,7 @@ from sklearn.model_selection import StratifiedGroupKFold
 
 from .local_eyelid_hybrid_features import manual_roi_tensor, validated_inputs
 from .local_eyelid_validation import load_manual_pair, perceptual_hash, sha256
-from .public_segmentation_data import discover_public_pairs, load_public_pair
+from .public_segmentation_data import discover_public_pairs, load_public_pair, find_similar_pairs
 
 SEED = 20261011
 PREPROCESSING = {
@@ -202,6 +202,9 @@ def prepare_inputs(source_root: Path, public_root: Path, output: Path) -> dict[s
             distance = int(np.count_nonzero(fingerprints[a] != fingerprints[b]))
             if distance <= 6:
                 near.append((a, b, distance))
+    aligned_near = list(near)
+    original_near = find_similar_pairs(pairs)
+    near = sorted(set(near) | set(original_near))
     local_tensors, local_details, cross = [], [], []
     for subject in local["subjects"]:
         row = local["rows"][subject]
@@ -219,7 +222,7 @@ def prepare_inputs(source_root: Path, public_root: Path, output: Path) -> dict[s
     public_y = np.array(labels, dtype=int)
     train, validation, groups = public_split(subjects, public_y, countries, near)
     audit.update(subjects=len(pairs), eligible=len(subjects), class_counts=np.bincount(public_y, minlength=2).tolist(),
-                 exact_source_duplicates=0, exact_decoded_duplicates=0, near_pairs=near, cross_domain_candidates=cross,
+                 exact_source_duplicates=0, exact_decoded_duplicates=0, near_pairs=near, aligned_phash_candidates=aligned_near, original_public_phash_candidates=original_near, cross_domain_candidates=cross,
                  training_subjects=[subjects[i] for i in train], validation_subjects=[subjects[i] for i in validation],
                  training_class_counts=np.bincount(public_y[train], minlength=2).tolist(), validation_class_counts=np.bincount(public_y[validation], minlength=2).tolist(),
                  records_private=details, groups=groups,

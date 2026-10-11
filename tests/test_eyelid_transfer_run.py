@@ -5,7 +5,8 @@ from pathlib import Path
 from unittest.mock import patch
 import numpy as np
 import torch
-from src.eyelid_transfer_run import train_local, private_destination
+from src.eyelid_transfer_run import train_local, private_destination, verify_public_contract
+from src.eyelid_transfer_data import public_split
 
 
 class TransferRunTests(unittest.TestCase):
@@ -13,6 +14,17 @@ class TransferRunTests(unittest.TestCase):
         root = Path('/private/tmp/example')
         for dest in [root / 'data/processed/local_eyelid_classification_2026-10-10_v1', root / 'raw/exp03']:
             with self.assertRaises(ValueError): private_destination(root, dest)
+
+    def test_prepared_public_contract_rejects_omitted_similarity_screen(self):
+        subjects = [f'India/{i}' for i in range(20)]
+        y = np.tile([0, 1], 10); pairs = [(subjects[0], subjects[1], 5)]
+        tr, va, groups = public_split(subjects, y, ['India'] * 20, pairs)
+        rows = [{'subject': s, 'country': 'India', 'age': 30, 'sex': 'M', 'hb_g_dl': 12 if label else 14} for s, label in zip(subjects, y)]
+        data = {'public_subjects': subjects, 'public_y': torch.tensor(y), 'public_train': tr, 'public_validation': va}
+        audit = {'records_private': rows, 'near_pairs': pairs, 'aligned_phash_candidates': [], 'original_public_phash_candidates': pairs, 'groups': groups}
+        verify_public_contract(data, audit)
+        audit['near_pairs'] = []
+        with self.assertRaises(ValueError): verify_public_contract(data, audit)
 
     def test_nested_trainer_passes_only_outer_training_labels(self):
         y = np.tile([0, 1], 10); folds = np.repeat(np.arange(1, 6), 4)

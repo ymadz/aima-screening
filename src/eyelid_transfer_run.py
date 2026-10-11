@@ -20,7 +20,7 @@ import torch
 from sklearn.metrics import average_precision_score
 from sklearn.model_selection import StratifiedKFold
 
-from .eyelid_transfer_data import PREPROCESSING, SEED, prepare_inputs
+from .eyelid_transfer_data import PREPROCESSING, SEED, prepare_inputs, harmonized_label, public_split
 from .local_eyelid_hybrid_features import validated_inputs
 from .eyelid_transfer_evaluation import compare_scores
 from .eyelid_transfer_neural import (DESIGN, initial_model, prefix_cache, fit_model,
@@ -55,6 +55,22 @@ def previous_unchanged(source_root: Path, output: Path) -> None:
     for name, hashes in prior.items():
         if tree_checksums(source_root / 'data/processed' / name) != hashes:
             raise ValueError('Historical experiment changed')
+
+
+def verify_public_contract(data: dict[str, Any], audit: dict[str, Any]) -> None:
+    records = {r["subject"]: r for r in audit["records_private"]}
+    subjects = data["public_subjects"]; labels = data["public_y"].numpy()
+    if len(set(subjects)) != len(subjects): raise ValueError("Repeated public subjects")
+    expected = {s: harmonized_label(r["age"], r["sex"], r["hb_g_dl"] if r["hb_g_dl"] is not None else np.nan)[0] for s, r in records.items()}
+    if set(subjects) != {s for s, label in expected.items() if label is not None}:
+        raise ValueError("Prepared public cohort differs from harmonized eligibility")
+    np.testing.assert_array_equal(labels, [expected[s] for s in subjects])
+    candidates = list(map(tuple, audit.get("aligned_phash_candidates", []))) + list(map(tuple, audit.get("original_public_phash_candidates", [])))
+    if set(candidates) != set(map(tuple, audit["near_pairs"])):
+        raise ValueError("Both perceptual screens must enter conservative public grouping")
+    tr, va, groups = public_split(subjects, labels, [records[s]["country"] for s in subjects], audit["near_pairs"])
+    np.testing.assert_array_equal(tr, data["public_train"]); np.testing.assert_array_equal(va, data["public_validation"])
+    if groups != audit["groups"]: raise ValueError("Prepared public groups changed")
 
 
 def historical_predictions(source_root: Path, subjects: list[str], labels: np.ndarray, folds: np.ndarray) -> dict[str, np.ndarray]:
@@ -204,6 +220,7 @@ def run(source_root: Path, output: Path, weights: Path) -> dict[str, Any]:
                        'versions': {n: importlib.metadata.version(n) for n in ('torch', 'torchvision', 'numpy', 'Pillow', 'opencv-python', 'scikit-learn', 'joblib', 'scipy', 'lightgbm', 'matplotlib')}}
         (output / 'environment.json').write_text(json.dumps(environment, indent=2))
     data = torch.load(output / 'inputs.pt', weights_only=False, map_location='cpu')
+    verify_public_contract(data, json.loads((output / 'public_audit.json').read_text()))
     model = initial_model(weights)
     map_path = output / 'prefix_maps.pt'
     if map_path.exists(): maps = torch.load(map_path, weights_only=True, map_location='cpu')
@@ -259,6 +276,7 @@ def verify(output: Path, source_root: Path) -> dict[str, Any]:
         if sha256(Path(path)) != digest:
             raise ValueError('Use the recorded implementation commit for reproduction')
     data = torch.load(output / 'inputs.pt', weights_only=False, map_location='cpu')
+    verify_public_contract(data, json.loads((output / 'public_audit.json').read_text()))
     maps = torch.load(output / 'prefix_maps.pt', weights_only=True, map_location='cpu')
     y, folds, subjects = data['local_y'].numpy(), data['local_folds'], data['local_subjects']
     public_model = load_checkpoint(output / 'public/best.pt')
