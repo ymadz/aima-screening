@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 import numpy as np
+import torch
 from src.local_eyelid_classifier import FEATURES, make_subject_folds
 from src.local_eyelid_hybrid_features import PREPROCESSING, private_output_path
 from src.local_eyelid_hybrid_model import DESIGN, fit_outer_training
@@ -50,6 +51,7 @@ class HybridRunTests(unittest.TestCase):
                        'per_fold':{str(n):{'fixed_0_5':evaluate(y[folds==n],p[folds==n],.5),'inner_selected':evaluate(y[folds==n],p[folds==n],t[folds==n])} for n in range(1,6)}})
             write_json(output/'checksum_manifest.json',tree_checksums(output))
             self.assertEqual(verify_run(output)['fold_pipelines'],35)
+            self.assertEqual(torch.get_num_threads(),1)
             prediction_path=output/'oof_predictions.csv'
             prediction_path.write_text(prediction_path.read_text().replace(subjects[0],'tampered_subject',1))
             with self.assertRaises(ValueError):verify_run(output)

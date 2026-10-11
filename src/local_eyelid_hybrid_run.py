@@ -14,6 +14,7 @@ from zoneinfo import ZoneInfo
 
 import joblib
 import numpy as np
+import torch
 from sklearn.metrics import average_precision_score, precision_recall_curve, roc_curve
 from sklearn.model_selection import StratifiedKFold
 from threadpoolctl import threadpool_limits
@@ -128,7 +129,10 @@ def verify_run(output: Path, source_root: Path | None = None) -> dict[str, Any]:
     expected=json.loads((output/'checksum_manifest.json').read_text())
     actual=tree_checksums(output);actual.pop('checksum_manifest.json',None)
     if expected!=actual:raise ValueError('Run checksum or artifact coverage differs')
-    proof=verify_models(output)
+    # Match the extraction/training process native thread policy on fresh loads.
+    torch.set_num_threads(1)
+    with threadpool_limits(limits=1):
+        proof=verify_models(output)
     if source_root is not None:
         configuration=json.loads((output/'experiment_config.json').read_text())
         for path,digest in configuration['source_hashes'].items():checked_file(source_root,path,digest)

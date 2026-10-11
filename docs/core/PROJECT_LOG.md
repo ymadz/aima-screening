@@ -201,3 +201,8 @@ Chronological record of meaningful implementation, data, methodology, and readin
 - Added exclusive ignored owner-only run output, canonical-source snapshot, code/environment/weight provenance, all 35 pipelines, inner decisions, OOF rows, metrics/intervals, aggregate figures/report and complete checksums. Sources and Experiment 1 are read-only and rechecked after execution.
 - Added checksum-first offline reproduction of every inner/outer pipeline, training-only scaler/PCA statistics, selected candidate/threshold and pooled/per-fold metrics. A complete synthetic 119-subject/19-positive fixture verifies all 35 pipelines and rejects tampered artifacts; output guards reject baseline/unignored/existing directories. The first guard assertion exposed macOS temporary-path canonicalization; the test now compares resolved paths. No research method changed.
 - Real training has not run at this implementation milestone; the new runner requires a clean committed code tree before execution.
+
+## 2026-10-11 — Standalone hybrid reproduction runtime corrected
+
+- The full hybrid run and in-process verification completed. Fresh-process verification crashed with default native threading; matching training's one-thread policy resolved it. Regression tests and standalone source-linked reproduction of all 35 pipelines now pass.
+- The original copied implementation also reproduced with the documented thread environment settings. No model/artifact changes, refitting or outer-result retuning occurred.

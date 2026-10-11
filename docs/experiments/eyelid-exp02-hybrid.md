@@ -35,3 +35,13 @@ python -m src.local_eyelid_hybrid_run verify --output /path/to/new/output --sour
 ```
 
 The exclusive owner-only output includes frozen configuration before fitting, canonical source mtime/hash, all source-link hashes, copied folds and LAB cache, frozen embeddings, public weight bytes/hash, 30 inner and five outer pipelines, exact selections/partitions, private OOF rows, metrics/intervals, aggregate PNG/SVG, report, dependency inventory, committed code snapshot, logs, reproduction proof and complete checksums. No patient image/ROI/mask is copied. Verification checks checksum coverage before loading models and reproduces scaler/PCA training statistics, candidate/threshold decisions and metrics without fitting. Source verification checks original output/readiness byte preservation and source-file hashes. Failed runs remain as evidence and are never resumed into or overwritten.
+
+## Standalone reproduction runtime
+
+The default native-thread configuration crashed in a fresh verification process on this workstation. The verifier now matches training's single-thread PyTorch/native-pool policy. All 35 pipelines and authoritative source hashes reproduce without fitting. Models and completed artifacts are unchanged.
+
+The original copied implementation at run commit `01cb856` can be verified with the tested environment settings:
+
+```bash
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 python -m src.local_eyelid_hybrid_run verify --output /path/to/completed/output
+```
