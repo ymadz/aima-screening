@@ -179,3 +179,9 @@ Chronological record of meaningful implementation, data, methodology, and readin
 - **What changed / why:** retained `README.md` and `AGENTS.md` at the repository root and grouped the remaining shared documents under `docs/core/`, `docs/models/`, `docs/workflows/`, `docs/experiments/`, `docs/audits/`, and `docs/policies/`. Converted the former reference index into `docs/README.md` and updated internal references.
 - **Preserved provenance:** historical annotation guides and local audit records remain beside their source data under `data/raw/local/`; no research data, code, model artifacts, methodology, or results changed.
 - **Status correction:** refreshed the PRD header to acknowledge the completed 2026-10-10 local manual-eyelid internal cross-validation while retaining its non-clinical, non-external-validation scope.
+
+## 2026-10-11 — Feature commits and Experiment 1 preservation tooling
+
+- Completed eight coherent commits for previously implemented data, annotation, rendering, segmentation, public evaluation, local CIELAB classification and documentation work. The completed Q&A documentation changes were committed after explicit owner approval; its separate worktree documents remain untouched.
+- Added a private archive creator and read-only verifier that reproduce ten saved fold models without fitting. Historical output/readiness hashes remain unchanged. Archive creation and verification are required before Experiment 2 begins; the archive procedure and cleanup commit list are documented in `docs/experiments/eyelid-exp01-preservation.md`.
+- Validation: 51 synthetic tests, source compilation, fresh 560-file data audit and original saved-model reproduction passed. No private data were committed or uploaded.
