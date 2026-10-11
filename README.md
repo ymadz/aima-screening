@@ -157,7 +157,7 @@ The main generated files are:
 
 ## Project Status
 
-In development as a student research prototype. The public inner-eyelid baseline is implemented. Local Zamboanga image import, fingernail modeling, subject-based splitting, and independent local testing are still in progress.
+This is a student research prototype, not a clinical product. The public inner-eyelid baseline has internal 10-fold cross-validation results. A separate local manual-eyelid LAB classifier completed fixed five-fold subject cross-validation on 119 eligible subjects (19 anemia, 100 non-anemia) on 2026-10-10 after source, mask and owner duplicate-review gates passed. At the fixed 0.5 research threshold it detected only 2 of 19 anemia subjects; its 84.9% accuracy largely reflects class imbalance. Local color rendering remains mixed and uncalibrated, and there is no untouched classifier holdout or external clinical validation. See the [local classifier guide](docs/experiments/local-eyelid-classifier.md), [PRD](docs/core/PRD.md) and [architecture](docs/core/ARCHITECTURE.md) for scope and limits.
 
 ## Acknowledgements
 
