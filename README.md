@@ -183,3 +183,5 @@ Manual anatomical ROIs and reviewed masks are the primary ground truth. Automate
 - ImageNet pretrained weights provided through torchvision
 - Python open-source libraries used for image processing, feature extraction, modeling, and evaluation
 - The local AIMA data collection team and study participants
+
+Experiment 3 public-to-local classification is complete and exactly reproduced in its isolated branch. It did not improve anemia detection: selected transfer detected 1/19 at 84% specificity; a separate nested LAB threshold analysis detected 7/19 at 84%. Read the [verified comparison](docs/experiments/eyelid-exp03-results-2026-10-11.md) and [transfer contract](docs/experiments/eyelid-exp03-transfer.md). Original experiments are preserved; these remain small-cohort internal development results.

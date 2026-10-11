@@ -60,7 +60,7 @@ flowchart LR
   end
 ```
 
-Dashed links describe candidate research flow, not current automated behavior. The public model's MobileNet weights are ImageNet weights; no public-AIMA-to-local transfer learning has been implemented.
+Dashed links show the original candidate flow. The legacy public feature extractor uses ImageNet weights. Independent Experiment 3 now implements public-anemia pretraining and local neural adaptation; its verified negative transfer result is documented below.
 
 ## 1. Public-data pipeline
 
@@ -147,7 +147,7 @@ Within each experiment, fit preprocessing/feature selection only on training fol
 
 - Extend the implemented eyelid LAB path only under an approved new experiment; an embedding ROI/background policy is not yet selected.
 - Compare eyelid-only, nail-only, and paired models on the local labeled cohort, after annotation sufficiency and QC.
-- Study transfer from the public cohort separately; the current ImageNet MobileNet feature extractor is not transfer learning from the public AIMA model.
+- Independent Experiment 3 studies public-to-local classification separately. The legacy ImageNet feature extractor remains unchanged.
 - Evaluate alternative ROI automation only against held-out, human-reviewed annotations, with acceptance criteria set before model selection.
 - Conduct independent/prospective testing and deployment/device studies only under approved research and governance procedures.
 
@@ -163,12 +163,16 @@ Standalone hybrid verification matches training's single-thread PyTorch/native-p
 
 ## Experiment 3 input preparation (implemented, 2026-10-11)
 
-`src/eyelid_transfer_data.py` adds independent read-only public/local source access, conservative adult Hb harmonization, manual-mask registration, profile conversion, public grouped train/validation assignment, cross-domain duplicate checks and private tensor preparation. Original experiments and LAB features remain immutable. See [Experiment 3 contract](../experiments/eyelid-exp03-transfer.md). Neural training results are not yet available.
+`src/eyelid_transfer_data.py` adds independent read-only public/local source access, conservative adult Hb harmonization, manual-mask registration, profile conversion, public grouped train/validation assignment, cross-domain duplicate checks and private tensor preparation. Original experiments and LAB features remain immutable. See [Experiment 3 contract](../experiments/eyelid-exp03-transfer.md). The accepted v3 neural training/evaluation is complete and exactly reproduced; see [verified results](../experiments/eyelid-exp03-results-2026-10-11.md).
 
 Experiment 3 also implements deterministic CPU binary MobileNetV3 public pretraining and head/late-layer transfer in `src/eyelid_transfer_neural.py`. Frozen ImageNet prefix maps are cached without fitting; BatchNorm statistics remain fixed. Best/last checkpoints and resume guards are private. See the Experiment 3 contract for prespecified hyperparameters.
 
-Experiment 3 execution and evaluation are implemented in `eyelid_transfer_run.py` and `eyelid_transfer_evaluation.py`: public-only inference, two local strategies with three-fold inner selection and outer refits, a separate nested historical LAB threshold comparison, paired conditional uncertainty, private checkpoints and checksum-based reproduction. Full training has not yet completed.
+Experiment 3 execution and evaluation are implemented in `eyelid_transfer_run.py` and `eyelid_transfer_evaluation.py`: public-only inference, two local strategies with three-fold inner selection and outer refits, a separate nested historical LAB threshold comparison, paired conditional uncertainty, private checkpoints and checksum-based reproduction. The accepted training run is complete; all model/threshold selections and predictions reproduced without refitting.
 
 Experiment 3 public grouping now conservatively combines original-JPEG and aligned-raster perceptual screens; a prepared-cohort execution gate verifies the union and exact assignments before fitting.
 
 `eyelid_transfer_reproduce.py` is the completed Experiment 3 reproduction entrypoint. It verifies the recorded original implementation, sealed artifacts and exact batch-16 prefix recomputation, avoiding false mismatch flags from batch-dependent float32 convolution. Training artifacts are immutable.
+
+## Experiment 3 verified outcome (2026-10-11)
+
+Public pretraining completed on 183 eligible subjects, with 146/37 grouped train/validation. Local A/B and training-selected strategy completed on the original 119 subjects/five outer folds. Selected transfer detected 1/19 anemia subjects at 84% specificity (ROC-AUC0.464/AP0.144), compared with7/19 at 84% for the separate nested historical LAB threshold analysis (ROC-AUC0.719/AP0.388). Public-only detected0/19. This design did not improve detection or justify added complexity. Original Experiment1/2 artifacts remain unchanged. All 41 neural/20 LAB models, 216 checksum-covered files, exact source/cache reproduction and independent pooled/per-fold metric checks passed. Results are internal CV with 19 positives and no classifier holdout. See the Experiment 3 results report for preprocessing differences and conditional uncertainty.

@@ -1,0 +1,9 @@
+# Model card: AIMA Experiment 3 eyelid transfer
+
+This experimental binary classifier uses manual inner-eyelid anatomy and actual ICC-managed sRGB inputs. MobileNetV3-Small begins with ImageNet1K_V1 weights, adapts its binary head and final two blocks on 183 eligible public subjects, then adapts its head only (A) or head/late blocks (B) within the original local 119-subject folds. BatchNorm statistics remain fixed; class weights, stopping, strategy choice and local thresholds use training information only.
+
+The accepted run is `local_eyelid_classification_exp03_transfer_2026-10-11_v3`. The public-only model detects no local anemia at either reported rule. Inner-selected transfer detects 1/19 at 84% specificity, ROC-AUC 0.464 and AP 0.144. A separate nested historical LAB threshold analysis detects 7/19 at 84%, ROC-AUC 0.719 and AP 0.388. This transfer design does not justify added complexity on the current cohort.
+
+The model is for research comparison. It is uncalibrated and has no external or clinical validation. Local results use internal CV with 19 positive subjects and no untouched classifier holdout. Public pregnancy-dependent labels are excluded rather than guessed. Public controlled lighting, country/prevalence confounding, age/sex differences and mixed local rendering remain limitations; the neural preprocessing differs from the historical baselines.
+
+All 41 neural/20 LAB selected checkpoints and predictions reproduce without refitting, including fresh exact frozen-prefix maps. Private artifacts remain ignored and local; original source images, masks, labels and Experiments 1/2 remain unchanged. See the [verified results](../experiments/eyelid-exp03-results-2026-10-11.md), [design contract](../experiments/eyelid-exp03-transfer.md) and corrected `src/eyelid_transfer_reproduce.py` entrypoint. No deployment or clinical use is supported by these results.
