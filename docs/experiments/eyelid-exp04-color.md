@@ -37,3 +37,17 @@ After classification completes, a fixed Ridge(alpha=10) model on managed robust1
 ## Artifact contract
 
 Only new, exclusive, owner-private ignored `data/processed/local_eyelid_classification_exp04_color_optimization_<date>_v<version>/` outputs. Save fresh input/provenance/rendering audits, diagnostic findings, feature definitions/cache, frozen config, folds, all fitted models/thresholds/inner decisions, OOF rows, metrics and paired differences, aggregate ROC/PR/confusion/tradeoff figures, environment/code copies, manifest, checksums and saved-model reproduction instructions. Patient-level rows, source linkage and fitted models never enter Git. Validate mask alignment, profile handling, RGB order, LAB units, pixel ranges, finite features, training-only fitting and reproducibility before reporting completion.
+
+## Implemented execution and verification
+
+The color/classifier/artifact modules are implemented and synthetic-tested. Source-level diagnostics are private; neither fitted models nor patient rows enter Git. The real run is pending as of this implementation commit. From the isolated worktree:
+
+```sh
+PYTHONPYCACHEPREFIX=/private/tmp/aima-exp04-pycache OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 \
+/Users/madz/Documents/aima-screening/aima_env/bin/python -m src.eyelid_color_run \
+ --source-root /Users/madz/Documents/aima-screening \
+ --preflight /Users/madz/Documents/aima-screening/data/processed/exp04_preflight_2026-10-11_v1 \
+ --output /Users/madz/Documents/aima-screening/data/processed/local_eyelid_classification_exp04_color_optimization_2026-10-12_v1
+```
+
+`src/eyelid_color_reproduce.py` verifies checksums before loading models, all720 classifier/10 optional regression pipelines, train-only scaler scope, the exact original partitions, all inner AP/threshold decisions and pooled/per-fold metrics. Add `--fresh-features` to re-extract every vector from read-only sources. An output collision fails closed. The completed run guide supplies the exact verification command; no command ever refits or edits the older experiments.
