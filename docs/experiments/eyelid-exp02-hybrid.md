@@ -15,7 +15,7 @@ Experiment 1 preservation succeeded before this worktree was created: branch `ar
 - Fixed tree settings: 100 estimators, learning rate 0.03, depth 2, three leaves, minimum 10 child samples, L2 penalty 5, minimum split gain 0.05, max_bin 31; deterministic single-thread CPU, no early stopping, augmentation or oversampling. No further tuning against outer results.
 - In the selected candidate's inner OOF scores, maximize sensitivity subject to specificity ≥0.80; ties favor greater specificity then the higher threshold. This research objective is not a clinical target or guarantee on outer subjects. Fit the selected pipeline on the complete outer training partition. Score outer subjects once, at fixed 0.5 and this training-selected threshold.
 
-## Planned evaluation and limits
+## Evaluation and limits
 
 Report accuracy, sensitivity, specificity, balanced accuracy, precision, F1, ROC-AUC, average precision and confusion matrices. Preserve all inner assignments, candidate predictions/parameters, selected thresholds, fitted transformers and inner/outer models privately. Paired stratified subject bootstrap intervals compare the same OOF subjects against Experiment 1; proportion intervals use Wilson intervals. All intervals are conditional on the observed OOF scores, fix prevalence and omit refit/overlapping-training uncertainty. Inner scores support selection only; they are not reported as independent performance.
 
@@ -23,4 +23,15 @@ The mixed rendering histories, uncalibrated color, only 19 positive cases, mask-
 
 Official technical references: [Torchvision MobileNetV3-Small weights and normalization](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.mobilenet_v3_small.html), [LightGBM parameters](https://lightgbm.readthedocs.io/en/stable/Parameters.html). The run records the installed versions rather than assuming the latest documentation version.
 
-Current implementation milestone: deterministic masked feature extraction, source/output guards, nested hybrid fitting, training-only candidate/threshold selection and conditional paired evaluation are implemented. The private run/artifact verifier follows separately; real hybrid training has not yet run.
+Current implementation milestone: feature extraction, nested fitting/evaluation and the private run/artifact verifier are implemented and synthetically verified. The real run follows this committed implementation. All 35 saved pipelines, all inner decisions and all 119 outer predictions can be verified without refitting.
+
+## Commands and artifacts
+
+Use the original project Python environment from the linked worktree; no dataset symlink or clone is required. Set explicit existing source paths and a new output version:
+
+```bash
+python -m src.local_eyelid_hybrid_run run --source-root /path/to/aima-screening --experiment1 /path/to/aima-screening/data/processed/local_eyelid_classification_2026-10-10_v1 --bundle /path/to/aima-screening/data/processed/local_eyelid_readiness_2026-10-10_v2 --output /path/to/aima-screening/data/processed/local_eyelid_classification_exp02_hybrid_2026-10-11_v1 --weights /path/to/cached/mobilenet_v3_small-047dcff4.pth
+python -m src.local_eyelid_hybrid_run verify --output /path/to/new/output --source-root /path/to/aima-screening
+```
+
+The exclusive owner-only output includes frozen configuration before fitting, canonical source mtime/hash, all source-link hashes, copied folds and LAB cache, frozen embeddings, public weight bytes/hash, 30 inner and five outer pipelines, exact selections/partitions, private OOF rows, metrics/intervals, aggregate PNG/SVG, report, dependency inventory, committed code snapshot, logs, reproduction proof and complete checksums. No patient image/ROI/mask is copied. Verification checks checksum coverage before loading models and reproduces scaler/PCA training statistics, candidate/threshold decisions and metrics without fitting. Source verification checks original output/readiness byte preservation and source-file hashes. Failed runs remain as evidence and are never resumed into or overwritten.

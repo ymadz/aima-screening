@@ -195,3 +195,9 @@ Chronological record of meaningful implementation, data, methodology, and readin
 
 - Added fold-local embedding scaling/eight-component PCA and conservative LightGBM, with exactly two class-weight settings chosen by three-fold inner OOF AP. Selected research thresholds use inner scores only (maximum sensitivity at specificity ≥0.80); the selection API does not accept outer validation labels. No outer early stopping or retuning is used.
 - Added fixed/fold-selected metrics and conditional paired stratified bootstrap comparisons against the unchanged baseline. Synthetic tests check training-only statistics, partition exclusivity, model-loading equality, selection invariance to outer features, threshold ties and hand-calculated metrics. Real hybrid training remains pending the artifact runner.
+
+## 2026-10-11 — Private hybrid run and reproduction tooling verified
+
+- Added exclusive ignored owner-only run output, canonical-source snapshot, code/environment/weight provenance, all 35 pipelines, inner decisions, OOF rows, metrics/intervals, aggregate figures/report and complete checksums. Sources and Experiment 1 are read-only and rechecked after execution.
+- Added checksum-first offline reproduction of every inner/outer pipeline, training-only scaler/PCA statistics, selected candidate/threshold and pooled/per-fold metrics. A complete synthetic 119-subject/19-positive fixture verifies all 35 pipelines and rejects tampered artifacts; output guards reject baseline/unignored/existing directories. The first guard assertion exposed macOS temporary-path canonicalization; the test now compares resolved paths. No research method changed.
+- Real training has not run at this implementation milestone; the new runner requires a clean committed code tree before execution.
