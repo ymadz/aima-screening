@@ -44,7 +44,7 @@ The protocol also discusses CNN transfer learning, YOLO-based ROI detection, Lig
 ## Model outputs
 
 - **Implemented public baseline:** an out-of-fold anemia probability and a binary class at a 0.5 threshold. It is a research classification output only.
-- **Local research output:** none yet; no local anemia classifier has been trained.
+- **Local research output:** completed exploratory manual-eyelid LAB and frozen MobileNetV3/LAB/LightGBM internal subject cross-validation. These produce private OOF research scores/labels; neither supplies a validated clinical threshold, external-test performance or deployment model. See [the completed comparison](../experiments/eyelid-exp02-results-2026-10-11.md).
 - **Future product output:** the protocol suggests a low/high-risk screen. This label, threshold, calibration, and user wording are not finalized. Continuous Hb regression is also discussed in the protocol but is not implemented or established as a product requirement.
 - No output may be described as a confirmed diagnosis, Hb measurement, or treatment recommendation.
 
@@ -79,4 +79,5 @@ Prototype work is ready to be evaluated when data lineage and labels are verifie
 - Local live-Sheet metadata: frozen and provenance-linked (140 subjects; 140 eyelid and 135 nail image references). A WHO-2024-derived adult cohort contains 119 labeled subjects (19 anemia, 100 non-anemia); source Hb fields are retained. The label run relies on the project owner's non-pregnancy attestation outside the Sheet.
 - Local manual annotations: consolidated under `data/raw/local/annotations/`; the current annotation manifest records 150 approved anatomical ROI/mask pairs (140 eyelid, 10 fingernail) and 125 pending fingernail annotations. Approval is for anatomical boundaries, not clinician validation or glare exclusion. Glare review is separate and unresolved.
 - Local pixel segmentation: experimental ExtraTrees proposals and a SAM 2.1 nail-plate assistance pilot are available. The ten-subject SAM pilot is promising for assisted tracing but shows boundary leakage; all 116 generated nail candidates remain unverified. A full-frame public-trained eyelid U-Net development check scored mean Dice 0.0027 across 111 local train/validation subjects; it is not suitable for unattended local use. All 140 reviewed eyelid masks remain the local references; no automated prediction is approved as ground truth.
-- Local anemia modeling, public-to-local transfer learning, multimodal classifier, mobile application, and prospective/external validation: not implemented.
+- Local anemia modeling: two manual-eyelid internal development experiments completed on the same 119 eligible subjects and five folds. The hybrid has lower ROC-AUC/AP and specificity; it is not established as superior. No untouched classifier holdout exists.
+- Public-anemia-to-local classification transfer learning, multimodal classifier, mobile application, and prospective/external validation: not implemented.

@@ -4,7 +4,7 @@ The owner requested preservation followed by an isolated hybrid experiment on 20
 
 The verified baseline uses 119 subjects (19 anemia/100 non-anemia), six unchanged masked LAB statistics, training-fold scaling and fixed five-fold logistic regression. At threshold 0.5 its confusion matrix is [[99, 1], [17, 2]], ROC-AUC 0.719474 and AP 0.387866. Stored annotation TIFF RGB, rather than raw sensor pixels, supplies the features. Mixed rendering histories and only 19 positive cases limit interpretation. All subjects are development subjects; there is no classifier holdout.
 
-The code milestone will be identified by branch `archive/eyelid-exp01-cielab-baseline` and annotated tag `eyelid-exp01-cielab-baseline-2026-10-11`. The private archive is planned at `~/Library/Application Support/AIMA/experiment-archives/eyelid-exp01-cielab-baseline_2026-10-11_v1`. Successful archive verification is required before the hybrid worktree is created. Git refs preserve code; the private archive independently preserves ignored results.
+The verified code milestone is identified by branch `archive/eyelid-exp01-cielab-baseline` and annotated tag `eyelid-exp01-cielab-baseline-2026-10-11`. The private archive was created at `~/Library/Application Support/AIMA/experiment-archives/eyelid-exp01-cielab-baseline_2026-10-11_v1`. Archive verification succeeded for all 97 checksum-covered files and ten saved models before the hybrid worktree was created. The milestone is `4bf6e2577d02b5e3338e1937140b7eaff31369b4`; all 41 original output/readiness hashes remain unchanged. Git refs preserve code; the private archive independently preserves ignored results.
 
 ## Feature cleanup preceding preservation
 

@@ -23,7 +23,7 @@ The mixed rendering histories, uncalibrated color, only 19 positive cases, mask-
 
 Official technical references: [Torchvision MobileNetV3-Small weights and normalization](https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.mobilenet_v3_small.html), [LightGBM parameters](https://lightgbm.readthedocs.io/en/stable/Parameters.html). The run records the installed versions rather than assuming the latest documentation version.
 
-Current implementation milestone: feature extraction, nested fitting/evaluation and the private run/artifact verifier are implemented and synthetically verified. The real run follows this committed implementation. All 35 saved pipelines, all inner decisions and all 119 outer predictions can be verified without refitting.
+Completed milestone: the prespecified real run finished on 2026-10-11 and all 35 pipelines, inner selections and 119 outer predictions reproduce without refitting. Source checks and independent metrics/embedding checks passed. See [the completed comparison](eyelid-exp02-results-2026-10-11.md).
 
 ## Commands and artifacts
 
