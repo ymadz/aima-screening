@@ -80,7 +80,7 @@ def prepare(root: Path,public: Path,archive: Path,archive_hash: str,preflight: P
     output.mkdir(mode=0o700)
     for name in ['audit','domain_comparison','implementation']:(output/name).mkdir(mode=0o700)
     y=data['labels'];hb=np.asarray([float(clinical[s]['normalized_hb_g_per_dl']) for s in data['subjects']]);sex=np.asarray([clinical[s]['sex'] for s in data['subjects']]);ages=[int(clinical[s]['age']) for s in data['subjects']]
-    cache={'public_x':torch.stack(public_x),'public_y':torch.tensor([r['label'] for r in records]),'public_hb':torch.tensor([r['hb_g_dl'] for r in records],dtype=torch.float32),
+    cache={'public_x':torch.stack(public_x),'public_y':torch.tensor([r['label'] for r in records]),'public_hb':torch.tensor([r['hb_g_dl'] for r in records],dtype=torch.float64),
            'public_ids':[r['image_id'] for r in records],'public_groups':[r['split_group'] for r in records],
            'public_train':audit['training_indices'],'public_validation':audit['validation_indices'],
            'local_x':torch.stack(local_x),'local_y':torch.tensor(y),'local_hb':torch.tensor(hb,dtype=torch.float64),
