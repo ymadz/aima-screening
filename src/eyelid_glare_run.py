@@ -39,6 +39,17 @@ def registry(output: Path) -> dict:
     return results
 
 
+def check_exp4_comparator(exp4: Path, folds: np.ndarray, result: tuple) -> None:
+    """Compare exact binary/JSON evidence, avoiding CSV decimal parsing loss."""
+    with np.load(exp4/'candidate_predictions.npz',allow_pickle=False) as cache:
+        np.testing.assert_array_equal(result[0],cache['A_robust_lr_c1_none'])
+    thresholds=np.full(len(folds),np.nan)
+    for fold in range(1,6):
+        saved=json.loads((exp4/f'fold_{fold}/selection.json').read_text())
+        thresholds[folds==fold]=saved['candidates']['A_robust_lr_c1_none']['rules']['0.8']['threshold']
+    np.testing.assert_array_equal(result[1],thresholds)
+
+
 def run(root: Path, output: Path) -> dict:
     os.umask(0o077);start=time.monotonic();root=root.resolve();output=output.resolve()
     if not output.is_relative_to(root/'data/processed') or not output.name.startswith('local_eyelid_exp04b_glare_regional_'):
@@ -79,8 +90,7 @@ def run(root: Path, output: Path) -> dict:
         print(f'Fitted outer fold {fold}: selected {rec["selected"]}',flush=True)
     np.savez_compressed(output/'candidate_predictions.npz',**probabilities)
     scores=registry(output)
-    np.testing.assert_allclose(scores['robust_none_selected'][0],old.ablation_A_robust_lr_c1_none_probability,rtol=0,atol=1e-14)
-    np.testing.assert_array_equal(scores['robust_none_selected'][1],old.ablation_A_robust_lr_c1_none_threshold)
+    check_exp4_comparator(root/'data/processed'/EXP4,folds,scores['robust_none_selected'])
     scores['exp4_joint_primary']=(old.exp04_joint_selected_probability.to_numpy(),old.exp04_joint_selected_threshold.to_numpy())
     table=pd.DataFrame({'subject_id':subjects,'label':y,'fold':folds})
     for name,(p,t) in scores.items():table[name+'_probability']=p;table[name+'_threshold']=t
@@ -133,6 +143,7 @@ def report(output: Path,metrics: dict) -> None:
     lines+=['','Full confusion matrices, per-fold metrics, Wilson/conditional intervals and paired differences are in metrics.json. Inner0.80 specificity is not an outer-performance guarantee. Original robust comparator matches sealed Experiment4 predictions/decisions. Coefficient signs/ranks are descriptive, with correlated features and overlapping training sets. Review all119 masks, including empty ones; retain pale tissue. No clinical/external-validation claim.']
     (output/'comparison_report_private.md').write_text('\n'.join(lines)+'\n')
     guide='''# Reproduction\n\nFrom the Experiment4B worktree with the project Python3.10 environment, one CPU thread and PYTHONPYCACHEPREFIX in a writable temporary directory:\n\n```bash\npython -m src.eyelid_glare_reproduce --source-root /Users/madz/Documents/aima-screening --output /Users/madz/Documents/aima-screening/data/processed/local_eyelid_exp04b_glare_regional_2026-10-12_v1 --fresh-features\n```\n\nChecksum verification occurs before model loading; all80 checkpoints, decisions, partitions and metrics are recomputed without fitting. Fresh mode re-generates all119 glare proposals from unchanged source pixels, compares masks and original/proposed-exclusion features exactly. Sources and Experiments1-4 are rechecked. Do not change the sealed review queue. Record future acceptance/corrections in a new versioned reviewed bundle, bound to proposal hashes; recheck class support in the verified subset before any exclusion classifier. No auto mask is approved by this run.\n'''
+    guide=guide.replace('local_eyelid_exp04b_glare_regional_2026-10-12_v1',output.name)
     (output/'REPRODUCTION.md').write_text(guide)
 
 if __name__=='__main__':

@@ -10,6 +10,7 @@ from src.eyelid_glare_features import FEATURES
 from src.eyelid_glare_evaluation import compare
 from src.eyelid_glare_reproduce import reproduce
 from src.eyelid_color_verify import check_metrics
+from src.eyelid_glare_run import check_exp4_comparator
 
 class GlareModelTests(unittest.TestCase):
     def test_frozen_grid_and_ties(self):
@@ -52,3 +53,13 @@ class GlareModelTests(unittest.TestCase):
             with patch('src.eyelid_glare_reproduce.joblib.load') as loader:
                 with self.assertRaises(ValueError):reproduce(root,root)
                 loader.assert_not_called()
+
+    def test_comparator_uses_authoritative_binary_and_json_thresholds(self):
+        folds=np.arange(1,6);p=np.arange(5)/10.;t=np.full(5,.42647694300000005)
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);np.savez(root/'candidate_predictions.npz',A_robust_lr_c1_none=p)
+            for fold in range(1,6):
+                d=root/f'fold_{fold}';d.mkdir()
+                (d/'selection.json').write_text(json.dumps({'candidates':{'A_robust_lr_c1_none':{'rules':{'0.8':{'threshold':float(t[0])}}}}}))
+            check_exp4_comparator(root,folds,(p,t))
+            with self.assertRaises(AssertionError):check_exp4_comparator(root,folds,(p,np.nextafter(t,0)))
