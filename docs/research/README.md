@@ -24,3 +24,5 @@ python scripts/validate_research_docs.py
 The validator checks central documents, registry statuses/IDs, and the
 existence of the non-sensitive report/metric manifests named by the registry.
 It does not read or export patient-level tables and it does not train models.
+
+Experiment5 is now completed and verified: [aggregate results and methods](../experiments/eyelid-exp05-results-2026-10-13.md). Use `python scripts/validate_research_docs.py --source-root /Users/madz/Documents/aima-screening` from this isolated worktree to resolve the read-only private artifact root.

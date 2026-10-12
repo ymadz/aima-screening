@@ -98,10 +98,20 @@ ARTIFACTS = {
     ),
 }
 
-PLANNED_OR_IN_PROGRESS = {
-    "AIMA-EXP04B",
-    "AIMA-EXP05",
-}
+ARTIFACTS.update({
+    "AIMA-EXP04B": (
+        "data/processed/local_eyelid_exp04b_reviewed_comparison_2026-10-12_v1/metrics.json",
+        "data/processed/local_eyelid_exp04b_reviewed_comparison_2026-10-12_v1/checksum_manifest.json",
+    ),
+    "AIMA-EXP05": (
+        "data/processed/local_eyelid_classification_exp05_cp_transfer_2026-10-12_v1/metrics.json",
+        "data/processed/local_eyelid_classification_exp05_cp_transfer_2026-10-12_v1/public_only/metrics.json",
+        "data/processed/local_eyelid_classification_exp05_cp_transfer_2026-10-12_v1/public_validation/metrics.json",
+        "data/processed/local_eyelid_classification_exp05_cp_transfer_2026-10-12_v1/run_manifest.json",
+        "data/processed/local_eyelid_classification_exp05_cp_transfer_2026-10-12_v1/checksum_manifest.json",
+        "data/processed/exp05_verification_2026-10-13_v1/reproduction.json",
+    ),
+})
 
 ALLOWED_STATUSES = {
     "COMPLETED_VERIFIED",
@@ -240,6 +250,21 @@ def check_metric_shapes(errors: list[str]) -> int:
     regression = json.loads((ARTIFACT_ROOT / "data/processed/local_eyelid_classification_exp04_color_optimization_2026-10-12_v1/regression/metrics.json").read_text())
     if not regression:
         fail(errors, "Experiment 4 regression metrics are empty")
+    checks += 1
+    exp4b = json.loads((ARTIFACT_ROOT / "data/processed/local_eyelid_exp04b_reviewed_comparison_2026-10-12_v1/metrics.json").read_text())
+    if exp4b.get("models", {}).get("glare_excluded_robust_balanced_selected", {}).get("subjects") != 119:
+        fail(errors, "Experiment4B reviewed aggregate cohort differs")
+    checks += 1
+    exp5_root = ARTIFACT_ROOT / "data/processed/local_eyelid_classification_exp05_cp_transfer_2026-10-12_v1"
+    exp5 = json.loads((exp5_root / "metrics.json").read_text())
+    for key in ("cp_classification_selected_threshold", "cp_regression_selected_threshold", "joint_selected_threshold"):
+        if exp5.get("models", {}).get(key, {}).get("subjects") != 119:
+            fail(errors, f"Experiment5 aggregate cohort differs: {key}")
+        checks += 1
+    run = json.loads((exp5_root / "run_manifest.json").read_text())
+    proof = json.loads((ARTIFACT_ROOT / "data/processed/exp05_verification_2026-10-13_v1/reproduction.json").read_text())
+    if (run.get("public_models"), run.get("local_neural_models"), run.get("local_classical_models")) != (2, 120, 60) or proof.get("status") != "reproduced_without_refitting":
+        fail(errors, "Experiment5 run/model reproduction evidence differs")
     checks += 1
     return checks
 

@@ -36,8 +36,7 @@ The verified research questions were:
 5. Can the same features provide a preliminary continuous-Hb feasibility
    signal?
 
-The last question was implemented only as an optional Experiment 4 analysis;
-an independent Experiment 5 has not begun. Source: registry IDs
+The initial continuous-Hb question was implemented as an optional Experiment4 analysis. Experiment5 subsequently completed CP classification/Hb pretraining and local adaptation; independent-cohort confirmation has not begun. Source: registry IDs
 `PUB-BASELINE-2026-08`, `AIMA-EXP01-FIXED-0.5`, `AIMA-EXP02`,
 `AIMA-EXP03-PUBLIC-TRANSFER`, and `AIMA-EXP04-HB-REGRESSION`.
 
@@ -242,7 +241,7 @@ operational dependencies.
 2. Freeze one prespecified rendering and feature policy before a new run.
 3. Collect more positive and borderline cases and reserve genuinely new
    subjects for external confirmation.
-4. Experiment4B is now completed: reviewed glare/region features did not improve sensitivity. Experiment5 CP-AnemiC transfer is authorized and undergoing source/domain auditing; retain separate pediatric/adult heads and frozen inner-only decisions. Neither supplies an independent cohort.
+4. Experiment4B is now completed: reviewed glare/region features did not improve sensitivity. Experiment5 CP-AnemiC transfer is completed and reproduced; retain separate pediatric/adult heads and frozen inner-only decisions. Neither supplies an independent cohort.
 5. Evaluate calibration, subgroup robustness, device variability, and
    prospective workflow only after the reference-label and privacy governance
    is defined.
@@ -284,4 +283,23 @@ source for the empirical metrics above.
 
 ## Verified4B update and authorized5 planning
 
-For Chapters3-5, add4B owner-reviewed96-glare/23-no-glare preprocessing, unchanged nested subject folds and the negative detection finding: masked robust10/19 at83% unweighted/84% weighted, full-selected9/19 at78%; AUC for weighted masked robust0.720526. The prior robust10/19 at84% remains a predefined comparison, not Experiment4 primary. Experiment5 will investigate classification versus Hb-regression CP pretraining with new adult heads, matched ImageNet controls and nine bounded local candidates. Its training/results remain pending; no claim of CP benefit is available.
+For Chapters3-5, add4B owner-reviewed96-glare/23-no-glare preprocessing, unchanged nested subject folds and the negative detection finding: masked robust10/19 at83% unweighted/84% weighted, full-selected9/19 at78%; AUC for weighted masked robust0.720526. The prior robust10/19 at84% remains a predefined comparison, not Experiment4 primary. Experiment5 completed classification/Hb pretraining, new adult heads, matched ImageNet controls and nine bounded local candidates. Use the completed tables and interpretation below; no independent benefit is established.
+
+## Experiment 5 manuscript integration — Chapters 3–5
+
+Chapter3: use the completed methods in METHODOLOGY.md and the frozen CP contract: authenticated V2/unknown patient count, original pediatric Hb target, new adult heads, common opaque tissue processing, classification versus Hb pretraining, A/B/C matched controls, train-only nested decisions and unchanged119 subjects/folds. Distinguish the segmentation29 reservation from the absence of a classifier holdout.
+
+Chapter4: use [verified Experiment5 tables](../experiments/eyelid-exp05-results-2026-10-13.md) and RESULTS.md for both thresholds, public-only/classification/regression, all adaptation candidates/policies, TP/FN/TN/FP, per-fold metrics and conditional intervals. Keep E4 primary separate from its predefined robust comparator.
+
+Chapter5 conclusions/discussion: CP-AnemiC pretraining did not establish an improvement that justifies its added complexity on AIMA. The predefined joint policy detected **11/19 anemia cases (57.9% sensitivity) at 78% specificity**, compared with **10/19 (52.6%) at 84% specificity** for the predefined Experiment 4 robust color comparison. One additional detection came with six additional false positives. Balanced accuracy was slightly lower (67.95% versus 68.32%), ROC-AUC was 0.734211 versus 0.709474, and AP was 0.372546 versus 0.385148. The paired sensitivity difference had a conditional 95% interval of −21.1 to +31.6 percentage points; the specificity difference was −6.0 points [−11.0, −2.0]. This does not establish independent or clinically acceptable improvement.
+
+The predefined CP-classification frozen-feature plus color candidate C detected **12/19 (63.2%) at 78% specificity**, with ROC-AUC 0.734211 and AP 0.372166. Its sensitivity 95% Wilson interval was 41.0–80.9%; specificity was 68.9–85.0%. Against the robust color comparator, its +10.5-point sensitivity difference had an interval of [−10.5, +36.8], while specificity fell by 6.0 points [−11.0, −2.0]. This is a predefined exploratory candidate comparison, not a replacement primary policy chosen from outer results. CP classification's actual inner-selected A/B/C policy detected 10/19 at 77% specificity; it selected C in four folds and B in one.
+
+CP Hb-regression C and its inner-selected policy detected **11/19 at 79% specificity** (ROC-AUC 0.730000; AP 0.370429), with exactly the same binary OOF decisions as matched ImageNet C (11/19 at 79%; ROC-AUC 0.730526; AP 0.368331). CP classification C added one detection and one false positive versus matched ImageNet C; its paired ROC-AUC and AP intervals included zero. The frozen-feature performance is therefore compatible with ImageNet features plus robust color statistics without useful added CP pretraining. Head-only and partial CP adaptations with training-selected thresholds detected only 2/19 and 0/19 for classification, or 4/19 and 0/19 for regression. These outer results did not guide any redesign.
+
+The public-only pediatric classifier detected **0/19 at 96% specificity** (ROC-AUC 0.459474; AP 0.150111). Public classification validation was weak (ROC-AUC 0.478125), and both bounded public objectives selected epoch 1. Public-only Hb prediction on AIMA had MAE 2.225671 g/dL, bias −1.905735 g/dL and R² −1.069180. Although its MAE was below the public-training-mean baseline of 2.801160, substantial adult underprediction and negative R² provide no evidence of a usable Hb estimator. Weak public fitting and observed acquisition/label differences are plausible explanations, not proven causes.
+
+Retain robust color-only classification as the practical candidate for independent confirmation, with a prespecified acquisition, model and operating-rule policy and genuinely new positive and borderline cases. Frozen embeddings can remain a predefined comparator in that study. These repeated-cohort results do not justify additional CP fine-tuning complexity or choosing a new winner by outer sensitivity. The inner specificity constraint of 0.80 was a research threshold policy and did not guarantee 0.80 outer specificity. No clinical acceptability threshold or independent validation has been established.
+
+
+No clinical/external validity follows. Candidate-level numerical differences are exploratory and cannot justify picking a new winner from outer scores. Refer to LIMITATIONS.md for small positive support, repeated development, source patient-linkage, calibration and domain-shift limits. All quantitative values trace to the sealed E5 artifacts and independent proof; no patient images/rows should be incorporated in public thesis materials.
