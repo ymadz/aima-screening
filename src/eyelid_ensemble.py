@@ -88,6 +88,11 @@ def overlap(labels: np.ndarray, lab: np.ndarray, cp: np.ndarray,
     """Describe historical error overlap, not a fitted union policy."""
     y = np.asarray(labels)
     average_scores(lab, cp, 0.5)
+    if y.shape != lab.shape or set(y) != {0, 1}:
+        raise ValueError('Invalid paired labels')
+    for thresholds in (lab_thresholds, cp_thresholds):
+        if thresholds.shape != y.shape or not np.isfinite(thresholds).all() or np.any((thresholds < 0) | (thresholds > np.nextafter(1., np.inf))):
+            raise ValueError('Invalid paired thresholds')
     a, b = lab >= lab_thresholds, cp >= cp_thresholds
     positive, negative = {}, {}
     keys = ('both_positive', 'lab_only_positive', 'cp_only_positive', 'both_negative')
