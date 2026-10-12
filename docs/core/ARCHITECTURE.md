@@ -1,6 +1,6 @@
 # AIMA Architecture
 
-**Status snapshot:** 2026-10-10. This document distinguishes runnable code, generated research artifacts, small experiments, and protocol proposals. For non-negotiable rules, see [ARCHITECTURE_ESSENTIALS.md](ARCHITECTURE_ESSENTIALS.md).
+**Status snapshot:** 2026-10-12. This document distinguishes runnable code, generated research artifacts, small experiments, and protocol proposals. For non-negotiable rules, see [ARCHITECTURE_ESSENTIALS.md](ARCHITECTURE_ESSENTIALS.md).
 
 ## System view
 
@@ -145,7 +145,7 @@ Within each experiment, fit preprocessing/feature selection only on training fol
 
 ### Proposed work, not current implementation
 
-- Extend the implemented eyelid LAB path only under an approved new experiment; an embedding ROI/background policy is not yet selected.
+- Further extensions require an approved new experiment; implemented hybrid, transfer and color paths are described below.
 - Compare eyelid-only, nail-only, and paired models on the local labeled cohort, after annotation sufficiency and QC.
 - Independent Experiment 3 studies public-to-local classification separately. The legacy ImageNet feature extractor remains unchanged.
 - Evaluate alternative ROI automation only against held-out, human-reviewed annotations, with acceptance criteria set before model selection.
@@ -185,3 +185,8 @@ The owner authorized independent local manual-eyelid diagnostics and classical c
 `src/eyelid_color_models.py` now implements the frozen 36-candidate grid, three inner subject folds, training-only logistic scaling/class weights, conservative LightGBM, inner AP selection and prespecified 70/80/90 specificity-constrained cutoffs. Its fitting API receives outer features without outer labels. Synthetic checks reproduce saved models and verify that changing outer features cannot change selections or thresholds; full real-data training remains pending.
 
 `src/eyelid_color_run.py` now freezes exclusive private configurations/source/code hashes, saves all720 classification pipelines, predefined render/joint policies and matched ablation metrics, conditional paired intervals, figures, and a separate fixed Ridge Hb feasibility check after primary classification. `src/eyelid_color_reproduce.py` implements checksum-first source/model/selection/metric verification without fitting, including optional fresh extraction of all features. The 87-test suite passes84 with3 unavailable-data skips; no full Experiment4 result is recorded at this commit.
+
+
+## Experiment4 verified outcome (2026-10-12)
+
+Completed acceptedv1 on exact119 subjects/folds, original/ICC-managed native pixels and6/18/21 masked features, with36 bounded candidates and inner-only AP/threshold decisions. Joint primary policy7/19 sensitivity at83% specificity (AUC.657/AP.352) does not improve the historical nested LAB7/19 at84% (AUC.719/AP.388). Predefined original-rendering robust18/C1 unweighted logistic comparison detects10/19 at84% (AUC.709/AP.385), recovering3 original misses; paired sensitivity interval0–31.6 percentage points and a managed counterpart7/19 prevent confirmed superiority. Lower-specificity recall gains also occur with unchanged historical features. Eleven proven P3/sRGB tag mismatches were converted without changing raster/masks; unknown export settings/capture calibration remain limitations. Fixed Ridge Hb feasibility MAE1.3274 versus training-mean1.3750 g/dL remains separate. All720 classifier/10 regression models,810 files and fresh exact source features verified without fitting. The sealed training implementation/output remain unchanged after the legacy-string verifier correction; future metadata uses Unicode.90 tests run,87 passed/3 skipped, compilation/whitespace checks pass. See [completed results](../experiments/eyelid-exp04-results-2026-10-12.md), [model card](../models/local-eyelid-color-model-card.md) and [registry](../experiments/registry.md).
