@@ -65,6 +65,15 @@ def coverage_audit(root: Path, subjects: list[str]) -> tuple[dict, list[dict]]:
     return summary, records
 
 
+def validate_fresh_inputs(fresh: dict, data: dict) -> None:
+    """Compare typed audit labels to CSV strings without weakening hash checks."""
+    if set(fresh)!=set(data['subjects']): raise ValueError('Fresh cohort membership differs')
+    for sid in data['subjects']:
+        for key in ('original_source_sha256','annotation_image_sha256','roi_sha256','mask_sha256','derived_anemia_label'):
+            if str(fresh[sid][key])!=str(data['rows'][sid][key]):
+                raise ValueError('Fresh input provenance differs')
+
+
 def prepare(root: Path, output: Path, preflight: Path) -> dict:
     cv2.setNumThreads(1); os.umask(0o077)
     root = root.resolve(); output = destination(root, output)
@@ -74,10 +83,7 @@ def prepare(root: Path, output: Path, preflight: Path) -> dict:
     if audit['metadata_source']['sha256'] != snapshot['sha256']: raise ValueError('Fresh audit metadata mismatch')
     data = validated_inputs(root, root/'data/processed'/PRIOR_NAMES[0], root/'data/processed'/PRIOR_NAMES[1])
     fresh = {r['subject_id']:r for r in json.loads((preflight/'fresh_inputs.json').read_text())}
-    if set(fresh)!=set(data['subjects']): raise ValueError('Fresh cohort membership differs')
-    for sid in data['subjects']:
-        for key in ('original_source_sha256','annotation_image_sha256','roi_sha256','mask_sha256','derived_anemia_label'):
-            if fresh[sid][key]!=data['rows'][sid][key]: raise ValueError('Fresh input provenance differs')
+    validate_fresh_inputs(fresh,data)
     previous = {name:tree_checksums(root/'data/processed'/name) for name in PRESERVED}
     historical = pd.read_csv(root/'data/processed'/EXP4/'oof_predictions.csv',dtype={'subject_id':str}).set_index('subject_id').loc[data['subjects']]
     np.testing.assert_array_equal(historical.label,data['labels']); np.testing.assert_array_equal(historical.fold,data['folds'])

@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 from src.eyelid_color_data import color_features
 from src.eyelid_glare_features import extract,require_verified_review,REGIONAL_NAMES,region_masks
-from src.eyelid_glare_prepare import destination
+from src.eyelid_glare_prepare import destination,validate_fresh_inputs
 
 class GlareFeatureTests(unittest.TestCase):
     def setUp(self):
@@ -41,3 +41,14 @@ class GlareFeatureTests(unittest.TestCase):
             with self.assertRaises(ValueError):destination(root,root/'results/test')
             good.mkdir(parents=True)
             with self.assertRaises(FileExistsError):destination(root,good)
+
+    def test_fresh_audit_typed_labels_without_weakening_provenance(self):
+        old={k:'a'*64 for k in ['original_source_sha256','annotation_image_sha256','roi_sha256','mask_sha256']}
+        old['derived_anemia_label']='1'
+        data={'subjects':['synthetic'],'rows':{'synthetic':old}}
+        fresh={'synthetic':dict(old,derived_anemia_label=1)}
+        validate_fresh_inputs(fresh,data)
+        fresh['synthetic']['derived_anemia_label']=0
+        with self.assertRaises(ValueError):validate_fresh_inputs(fresh,data)
+        fresh['synthetic']=dict(old,mask_sha256='changed')
+        with self.assertRaises(ValueError):validate_fresh_inputs(fresh,data)
