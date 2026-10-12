@@ -43,6 +43,7 @@ These repository documents are evidence-based project references. If a newer use
 - Experiment 2: [methods/reproduction](experiments/eyelid-exp02-hybrid.md), [completed comparison](experiments/eyelid-exp02-results-2026-10-11.md)
 - Eyelid anemia [experiment registry](experiments/registry.md)
 - Experiment 4: [methods](experiments/eyelid-exp04-color.md), [verified results](experiments/eyelid-exp04-results-2026-10-12.md), [model card](models/local-eyelid-color-model-card.md)
+- Experiment 4B: [methods](experiments/eyelid-exp04b-methods.md), [verified glare/regional results and review handoff](experiments/eyelid-exp04b-results-2026-10-12.md)
 - Complete commit/file handoff: [Git cleanup and experiments](audits/git-cleanup-and-experiment-handoff-2026-10-11.md)
 - Nail SAM pilot: [`experiments/sam2-nail-pilot-2026-10-09.md`](experiments/sam2-nail-pilot-2026-10-09.md)
 - Segmentation readiness audit: [`audits/segmentation-data-audit-2026-10-08.md`](audits/segmentation-data-audit-2026-10-08.md)
