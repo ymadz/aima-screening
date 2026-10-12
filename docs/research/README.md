@@ -26,3 +26,5 @@ existence of the non-sensitive report/metric manifests named by the registry.
 It does not read or export patient-level tables and it does not train models.
 
 Experiment5 is now completed and verified: [aggregate results and methods](../experiments/eyelid-exp05-results-2026-10-13.md). Use `python scripts/validate_research_docs.py --source-root /Users/madz/Documents/aima-screening` from this isolated worktree to resolve the read-only private artifact root.
+
+Experiment6 is completed and verified: [complementarity, ensemble and image-audit report](../experiments/eyelid-exp06-results-2026-10-13.md). Equal averaging gained one detection and five false positives; the training-selected weighted policy gained no net detections. The simpler robust color candidate remains the practical hypothesis for independent confirmation. Run the existing validator with `--source-root /Users/madz/Documents/aima-screening` to resolve private artifacts from this isolated branch.

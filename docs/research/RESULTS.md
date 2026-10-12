@@ -254,3 +254,28 @@ Retain robust color-only classification as the practical candidate for independe
 | Public-training mean on AIMA | 2.801160 [2.545484, 3.072611] | 3.154166 | -2.569538 [-2.882164, -2.241765] | -1.973120 |
 
 All exact paired differences, fixed/selected tables and provenance: [verified Experiment5 report](../experiments/eyelid-exp05-results-2026-10-13.md), private `metrics.json`, `public_validation/metrics.json`, `public_only/metrics.json` in the E5 bundle. Conditional intervals omit refitting/selection uncertainty. Predefined E4 robust comparison remains separate from its primary policy.
+
+## Experiment 6 — verified exploratory ensemble outcomes
+
+Partial complementarity justified a bounded test; equal averaging did not preserve robust LAB specificity and the training-selected weighted policy added no net anemia detection. Historical robust and CP C comparisons are distinct from their primary selected policies. Exact28-rule/fixed/secondary, per-fold, uncertainty and paired tables are in [Experiment 6 report](../experiments/eyelid-exp06-results-2026-10-13.md). All rates are pooled internal five-fold OOF on119 reused subjects 19/100.
+
+| Model / rule | Accuracy | Sensitivity | Specificity | Balanced accuracy | Precision | F1 | ROC-AUC | AP | TP/FN/TN/FP |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| exp04_primary_historical | 0.756303 | 0.368421 | 0.830000 | 0.599211 | 0.291667 | 0.325581 | 0.656842 | 0.352228 | 7/12/83/17 |
+| exp04_robust_historical | 0.789916 | 0.526316 | 0.840000 | 0.683158 | 0.384615 | 0.444444 | 0.709474 | 0.385148 | 10/9/84/16 |
+| exp05_cp_C_historical | 0.756303 | 0.631579 | 0.780000 | 0.705789 | 0.352941 | 0.452830 | 0.734211 | 0.372166 | 12/7/78/22 |
+| exp05_primary_historical | 0.747899 | 0.578947 | 0.780000 | 0.679474 | 0.333333 | 0.423077 | 0.734211 | 0.372546 | 11/8/78/22 |
+| equal_fixed | 0.789916 | 0.263158 | 0.890000 | 0.576579 | 0.312500 | 0.285714 | 0.737895 | 0.379070 | 5/14/89/11 |
+| equal_spec0.8 | 0.756303 | 0.578947 | 0.790000 | 0.684474 | 0.343750 | 0.431373 | 0.737895 | 0.379070 | 11/8/79/21 |
+| weighted_fixed | 0.764706 | 0.315789 | 0.850000 | 0.582895 | 0.285714 | 0.300000 | 0.731579 | 0.371157 | 6/13/85/15 |
+| weighted_spec0.8 | 0.747899 | 0.526316 | 0.790000 | 0.658158 | 0.322581 | 0.400000 | 0.731579 | 0.371157 | 10/9/79/21 |
+| equal_spec0.85 | 0.773109 | 0.368421 | 0.850000 | 0.609211 | 0.318182 | 0.341463 | 0.737895 | 0.379070 | 7/12/85/15 |
+| equal_spec0.9 | 0.789916 | 0.157895 | 0.910000 | 0.533947 | 0.250000 | 0.193548 | 0.737895 | 0.379070 | 3/16/91/9 |
+| weighted_spec0.85 | 0.764706 | 0.421053 | 0.830000 | 0.625526 | 0.320000 | 0.363636 | 0.731579 | 0.371157 | 8/11/83/17 |
+| weighted_spec0.9 | 0.781513 | 0.210526 | 0.890000 | 0.550263 | 0.266667 | 0.235294 | 0.731579 | 0.371157 | 4/15/89/11 |
+
+Eight shared detections, two LAB-only, four CP-only and five shared misses; 78 shared clearances,16 shared false positives and six CP-only false positives. Pearson0.801841/Spearman0.823465; agreement107/119. Equal0.80 gains1 detection and 5 false alarms versus robust; weighted gains0 and 5. Equal sensitivity Wilson95%36.3–76.9%, specificity 70.0–85.8%. Paired equal-minus-LAB sensitivity+5.263 points [0,15.789], specificity−5 [−10,−1], AUC+0.028421 [−0.038947,0.099474] and AP−0.006078 [−0.068915,0.044386]. These conditional intervals omit refit/selection uncertainty; differences do not establish superiority.
+
+The secondary75%-LAB0.85 candidate detected 9/19 at 85% specificity but was not selected as primary from outer outcomes. Training-selected weights are0.50,0.50,0.25,0.25,0.25. Fixed0.5 and training-selected rules differ; achieved specificity is not the requested inner target. No stacking, calibration or base/neural retraining occurred.
+
+Sources: `data/processed/local_eyelid_classification_exp06_ensemble_v1/``metrics.json`, `error_overlap.json`, fold decisions and checksum manifest; `data/processed/exp06_verification_2026-10-13_v1/reproduction.json`. See [Experiment 6 report](../experiments/eyelid-exp06-results-2026-10-13.md). Favor robust color-only for independent confirmation; no external/clinical performance claim.

@@ -99,6 +99,13 @@ ARTIFACTS = {
 }
 
 ARTIFACTS.update({
+    "AIMA-EXP06": (
+        "data/processed/local_eyelid_classification_exp06_ensemble_v1/metrics.json",
+        "data/processed/local_eyelid_classification_exp06_ensemble_v1/error_overlap.json",
+        "data/processed/local_eyelid_classification_exp06_ensemble_v1/experiment_manifest.json",
+        "data/processed/local_eyelid_classification_exp06_ensemble_v1/checksum_manifest.json",
+        "data/processed/exp06_verification_2026-10-13_v1/reproduction.json",
+    ),
     "AIMA-EXP04B": (
         "data/processed/local_eyelid_exp04b_reviewed_comparison_2026-10-12_v1/metrics.json",
         "data/processed/local_eyelid_exp04b_reviewed_comparison_2026-10-12_v1/checksum_manifest.json",
@@ -265,6 +272,20 @@ def check_metric_shapes(errors: list[str]) -> int:
     proof = json.loads((ARTIFACT_ROOT / "data/processed/exp05_verification_2026-10-13_v1/reproduction.json").read_text())
     if (run.get("public_models"), run.get("local_neural_models"), run.get("local_classical_models")) != (2, 120, 60) or proof.get("status") != "reproduced_without_refitting":
         fail(errors, "Experiment5 run/model reproduction evidence differs")
+    checks += 1
+    exp6_root = ARTIFACT_ROOT / "data/processed/local_eyelid_classification_exp06_ensemble_v1"
+    exp6 = json.loads((exp6_root / "metrics.json").read_text())
+    for key, counts in (("exp04_robust_historical", [[84, 16], [9, 10]]),
+                        ("exp05_cp_C_historical", [[78, 22], [7, 12]]),
+                        ("equal_spec0.8", [[79, 21], [8, 11]]),
+                        ("weighted_spec0.8", [[79, 21], [9, 10]])):
+        model = exp6.get("models", {}).get(key, {})
+        if model.get("subjects") != 119 or model.get("confusion_matrix_labels_0_1") != counts:
+            fail(errors, f"Experiment6 aggregate evidence differs: {key}")
+        checks += 1
+    proof6 = json.loads((ARTIFACT_ROOT / "data/processed/exp06_verification_2026-10-13_v1/reproduction.json").read_text())
+    if proof6.get("status") != "reproduced_without_refitting" or proof6.get("models_reproduced") != 40:
+        fail(errors, "Experiment6 reproduction evidence differs")
     checks += 1
     return checks
 
