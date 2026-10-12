@@ -172,7 +172,7 @@ def run(source_root: Path, preflight: Path, output: Path) -> dict:
     np.testing.assert_array_equal(clinical.derived_anemia_label.astype(int),y)
     old=pd.read_csv(source_root/'data/processed'/PRIOR_NAMES[1]/'all_subject_eligibility.csv',dtype={'subject_id':str}).set_index('subject_id').loc[subjects]
     np.testing.assert_array_equal(clinical.normalized_hb_g_per_dl.astype(float),old.normalized_hb_g_per_dl.astype(float))
-    hb=clinical.normalized_hb_g_per_dl.astype(float).to_numpy();sex=clinical.sex.to_numpy()
+    hb=clinical.normalized_hb_g_per_dl.astype(float).to_numpy();sex=clinical.sex.to_numpy(dtype=str)
     files=sorted(Path(__file__).parent.glob('*.py'))
     source_hashes={str(canonical):snapshot['sha256'],str(canonical.parent/'provenance.json'):snapshot['provenance_sha256']}
     source_hashes.update(fresh['source_files'])

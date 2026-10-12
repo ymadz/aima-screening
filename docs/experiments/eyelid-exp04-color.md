@@ -51,3 +51,7 @@ PYTHONPYCACHEPREFIX=/private/tmp/aima-exp04-pycache OMP_NUM_THREADS=1 OPENBLAS_N
 ```
 
 `src/eyelid_color_reproduce.py` verifies checksums before loading models, all720 classifier/10 optional regression pipelines, train-only scaler scope, the exact original partitions, all inner AP/threshold decisions and pooled/per-fold metrics. Add `--fresh-features` to re-extract every vector from read-only sources. An output collision fails closed. The completed run guide supplies the exact verification command; no command ever refits or edits the older experiments.
+
+## Reproduction correction after the accepted v1 run
+
+The full classification/regression run is sealed under the recorded `2a0f971` implementation. Initial reproduction stopped because pandas sex strings were serialized as an object array, which the numeric-only NPZ reader refused. This affects metadata loading, not training or predictions. `src/eyelid_color_verify.py` supersedes the original verifier: it checks sealed hashes before loading the trusted legacy string array, strictly checks M/F values against clinical provenance, verifies copied code against the recorded Git commit, and checks current model/data definitions. Future runs serialize sex as Unicode arrays. No sealed artifact or fitted model is edited and no retraining is required. Use the new verifier with the same arguments, including `--fresh-features`. The sealed original guide is retained; the corrected guide is supplied in the separate verification bundle and final results report.
