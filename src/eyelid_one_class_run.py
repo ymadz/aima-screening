@@ -317,7 +317,7 @@ def run(output: Path) -> dict:
         "nested_choices_by_fold": {f: r["nested_B_selected_candidate"] for f, r in records.items()},
         "public_training_groups": {s: len(data[s+"_ids"]) for s in ("eyes", "cp")},
         "inner_and_outer_model_paths": sorted(str(p.relative_to(output)) for p in (output/"models").glob("*.joblib")),
-        "execution_log": str(root/"data/processed/exp07_preservation_2026-10-13_v1/exp07_run.log")})
+        "execution_log": str(root/"data/processed/exp07_preservation_2026-10-13_v1"/("exp07_run_"+output.name.rsplit("_", 1)[-1]+".log"))})
     manifest = {"status": "completed_exploratory_internal_subject_cv", "source_commit": commit,
         "subjects": 119, "class_counts_0_1": [100, 19], "candidate_tracks": candidates,
         "policy_outputs": len(outputs), "models": len(list((output/"models").glob("*.joblib"))),
