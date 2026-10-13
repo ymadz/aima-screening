@@ -304,3 +304,39 @@ Equal averaging at training specificity≥0.80 detects 11/19 at 79%, AUC0.737895
 Reviewed119 private anatomy contexts: structural checks pass, but tissue extent/orientation and hair/eyelash handling vary. No masks/labels changed. Shared misses3 mild/2 moderate; repeated-photo consistency unavailable because only one verified eyelid original per subject and 154 files unassigned. Mixed acquisition/color/clipping remains unresolved; previous4B failures do not justify new glare fitting.
 
 136 tests completed 133 passed/3 legacy-source skips; compileall/whitespace passed.109-file sealed private bundle and 40-pipeline/decision/prediction/metric/interval independent reproduction preserve every old source/result. Updated the existing six central research documents and validator on this new branch, including inherited completed 5 results. Protocol/helper commit bc116af precedes new outcomes; evaluator commit f501039 and audit commit 23b04d6 and the documentation commit preserve the verified work after direct in-chat approval resolved automatic review. No push. See [complete report](../experiments/eyelid-exp06-results-2026-10-13.md). Prefer robust color-only for a prespecified comparison on new positive/borderline subjects.
+
+
+## 2026-10-14 — Experiment 7 preservation, negative results and reproduction
+
+Owner authorized preservation-first normal-only anemia detection/public
+transfer and eligible commits/push. Verified Exp1–6/4B refs and original
+validators;2,717 historical files matched. Safe previously unsynchronized
+experiment branches were pushed after outgoing privacy/remote checks, with
+no main push/merge or changes to unrelated work. Created the requested7
+branch from verified3b74755 in a retained managed worktree; froze340d3be
+protocol before any new models.
+
+Canonical clinical/source/approved-mask audit and exact119 robust18/fold
+comparison passed. Eyes91/CP108 normal training groups support the bounded
+public tracks with explicit anatomical/rendering/pediatric/label limitations.
+Separate nail-workflow reset changed three mutable tables; v1 stopped before
+fitting. Archived exact old hashes plus unchanged full140-eyelid rows and
+fresh current audit allow strict v2 with identical arrays and design.
+
+At primary A85 all six local models detect4/19 at85–88% specificity; robust
+comparison remains10/19 at84%. Mahalanobis AUC/AP.537368/.258772;
+SVM.10/scale.531579/.344039. Nested B85 detects3/19 at92%; Eyes normal
+adaptation5/19 at88%. Direct public A gives19TP/100FP Eyes,12TP/77FP CP,
+16TP/75FP combined, demonstrating calibration mismatch. No useful normal-only
+or public benefit established, no outer winner selected, no clinical/fairness
+claim. Preserve robust color as the practical independent-confirmation candidate.
+
+Execution6513c9c independently reproduces289 models/87 policies, all train-only
+statistics/inner decisions/OOF metrics/paired intervals/error analysis and119
+fresh vectors without fitting; historical sources/artifacts remain intact.
+151 tests:148 pass/three expected legacy-source skips; compilation/whitespace
+pass. Cached-feature run19.369s,430,637,056-byte peak RSS. Completed full
+report and six central research documents on this branch only; no protocol
+manuscript/PRD change. Private accepted v2 and separate proof retained; backup
+independence and measured acquisition/fairness remain limitations. See
+[complete handoff](../experiments/eyelid-exp07-results.md).

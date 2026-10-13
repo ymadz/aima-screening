@@ -226,3 +226,33 @@ The CP path described above completed both public objectives and all nine nested
 The isolated `experiment/eyelid-exp06-ensemble` branch reuses verified 5 infrastructure (base 0943363), read-only main-source data and sealed E4/E5 fold models. `src/eyelid_ensemble.py` strictly aligns subjects/labels/folds and selects bounded weights/cutoffs from matched inner scores; `src/eyelid_ensemble_run.py` reproduces40 saved relevant pipelines and computes28 historical/fixed/targeted outer policy outputs without fitting any model. `src/eyelid_information_audit.py` produces ignored descriptive anatomy/repeated-original/Hb/rendering evidence without changing sources or labels. No stacking/calibration or deployment model exists.
 
 E4 original robust18 is a predefined candidate, not its joint primary policy; E5 CP-classification C differs from its joint primary policy. Equal averaging at inner specificity≥0.80 yields11/19 at 79% outer specificity, versus robust10/19 at 84%. Inner-selected weighted averaging yields10/19 at 79%. Every learned choice is outer-training-only; the historical gate/base choice and reused cohort keep the study exploratory. No independent/clinical validation follows. Private artifacts are under`data/processed/local_eyelid_classification_exp06_ensemble_v1/`; independent proof under`data/processed/exp06_verification_2026-10-13_v1/`. See [Experiment6 report](../experiments/eyelid-exp06-results-2026-10-13.md) and the existing central research records.
+
+
+## Experiment 7 — implemented normal-only research path (2026-10-14)
+
+The isolated `experiment/eyelid-exp07-one-class` worktree adds
+`eyelid_one_class.py` (guarded normal detectors/decisions),
+`eyelid_one_class_data.py` (fresh canonical/group/ROI compatibility audit),
+`eyelid_one_class_evaluation.py` (unbounded-score metrics/paired uncertainty),
+and `eyelid_one_class_run.py` (bounded nested run/checksum-first reproduction).
+It reuses unchanged original robust18 extraction and119-subject folds; no
+local deployment model, neural training or requirement change exists.
+
+Six local configurations and eight predefined public Mahalanobis tracks fit
+only training normals; separate A normal-only/B training-label-assisted rules
+use inner scores. B/C/D direct, source-balanced and margin-adapted models
+retain source-specific targets and conservative groups. Public validation and
+local held-out subjects are excluded from all learned quantities. Higher
+scores denote novelty, not diagnosis. Execution6513c9c saved289 models/87
+outputs; all scopes/statistics/decisions/OOFs/metrics and119 fresh vectors
+independently reproduce. All local A85 candidates detect4/19 at85–88%
+specificity, versus preserved robust10/19 at84%. No useful public benefit.
+
+An unrelated canonical nail reset changed three table hashes. v1 stopped
+before fitting and was sealed; v2 verifies exact archived workflow bytes,
+full-field equality for140 eyelids and every remaining source guard. Both
+versions' feature arrays are identical. Private output and separate proof are
+under ignored paths in the retained managed worktree. Source originals,
+approved eyelid masks, labels, historical artifacts and all prior branches
+remain unchanged. See [verified Experiment 7](../experiments/eyelid-exp07-results.md)
+and central research records for implementation versus research limitations.

@@ -279,3 +279,52 @@ Eight shared detections, two LAB-only, four CP-only and five shared misses; 78 s
 The secondary75%-LAB0.85 candidate detected 9/19 at 85% specificity but was not selected as primary from outer outcomes. Training-selected weights are0.50,0.50,0.25,0.25,0.25. Fixed0.5 and training-selected rules differ; achieved specificity is not the requested inner target. No stacking, calibration or base/neural retraining occurred.
 
 Sources: `data/processed/local_eyelid_classification_exp06_ensemble_v1/``metrics.json`, `error_overlap.json`, fold decisions and checksum manifest; `data/processed/exp06_verification_2026-10-13_v1/reproduction.json`. See [Experiment 6 report](../experiments/eyelid-exp06-results-2026-10-13.md). Favor robust color-only for independent confirmation; no external/clinical performance claim.
+
+
+## Experiment 7 — verified negative normal-only/transfer result (2026-10-14)
+
+Primary target is training specificity.85; realized outer specificity below
+is measured on100 non-anemic subjects. A is normal-only cutoff calibration;
+B uses inner training labels only for decisions. Both fit normal examples
+only. Counts are TP/FP/TN/FN; confusion matrices are[[TN,FP],[FN,TP]]. Ranking
+uses predefined normal cross-fit standardization. All87 outputs appear in
+[the full report](../experiments/eyelid-exp07-results.md); no outer winner is
+selected.
+
+| Policy | TP/FP/TN/FN | Sensitivity | Specificity | ROC-AUC | AP |
+|---|---|---|---|---|---|
+| Mahalanobis A85 | 4/13/87/15 | 21.0526% | 87% | 0.537368 | 0.258772 |
+| SVM0.10/scale A85 | 4/12/88/15 | 21.0526% | 88% | 0.531579 | 0.344039 |
+| Isolation Forest A85 | 4/15/85/15 | 21.0526% | 85% | 0.498421 | 0.246435 |
+| Secondary nested B85 | 3/8/92/16 | 15.7895% | 92% | 0.514737 | 0.252140 |
+| B1 Eyes direct A85 | 19/100/0/0 | 100% | 0% | 0.550526 | 0.184737 |
+| B2 Eyes normal adaptation A85 | 5/12/88/14 | 26.3158% | 88% | 0.541053 | 0.295872 |
+| B3 Eyes/local pooled A85 | 4/17/83/15 | 21.0526% | 83% | 0.519474 | 0.302284 |
+| C1 CP direct A85 | 12/77/23/7 | 63.1579% | 23% | 0.378421 | 0.129228 |
+| C2 CP normal adaptation A85 | 4/12/88/15 | 21.0526% | 88% | 0.500526 | 0.261827 |
+| C3 CP/local pooled A85 | 3/15/85/16 | 15.7895% | 85% | 0.496842 | 0.202217 |
+| D1 both public A85 | 16/75/25/3 | 84.2105% | 25% | 0.468947 | 0.150368 |
+| D2 both normal adaptation A85 | 4/13/87/15 | 21.0526% | 87% | 0.482632 | 0.216244 |
+| Preserved Exp4 robust18 comparator | 10/16/84/9 | 52.6316% | 84% | 0.709474 | 0.385148 |
+
+All four local SVMs and Mahalanobis detect4/19 under A85; Forest also4/19.
+At B85 Mahalanobis/Forest detect3/19 at92%/88%, all SVMs4/19 at93%.
+Public B85 TP/FP: B1 2/8, B2 5/12, B3 3/2, C1 0/7, C2 2/5, C3 1/11,
+D1 1/12, D2 5/12. Direct public calibration failure must not be presented as
+a sensitivity gain.
+
+Against preserved robust18, Mahalanobis A85 loses six detections and saves
+three FP; sensitivity difference−31.6pp [−57.9,−5.3], specificity+3pp
+[−7,+13], AUC−0.172105 [−0.361053,+0.021066], AP−0.126376
+[−0.271858,+0.030073]. Shared/anomaly-only/robust-only/shared-missed anemia
+counts are3/1/7/8. B2 loses five detections/saves four FP; paired sensitivity
+−26.3pp [−52.6,+5.3]. Nested B loses seven/saves eight; sensitivity−36.8pp
+[−63.2,−10.5]. These conditional fixed-OOF intervals do not establish
+independent clinical differences. One positive is5.26pp; no multiplicity
+correction or refitting bootstrap was performed.
+
+B2 versus local Mahalanobis A85 adds one detection/removes one FP, but its
+paired AUC+0.003684 interval[−0.038947,+0.046329] and AP+0.037100
+[−0.019739,+0.088899] span zero. Public normals did not establish useful
+improvement. All prior metrics remain unchanged. Source commit6513c9c;
+289 models/87 outputs independently reproduced,148 tests passed/three skips.

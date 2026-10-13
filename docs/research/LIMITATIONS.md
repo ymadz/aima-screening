@@ -148,3 +148,44 @@ Unequal class weighting and score distributions make raw averages hard to calibr
 Thumbnail inspection cannot verify every anatomical boundary clinically. Visible tissue extent, camera orientation, margin handling and hair/eyelash occlusion vary; structural binary/single-component checks do not establish tissue equivalence. Existing owner approvals are preserved. There is one verified original eyelid image per subject;154 unassigned files cannot support repeated-image analysis without new identity/role/annotation evidence. Shared misses include moderate as well as mild anemia, so a near-cutoff explanation is incomplete. Hb subgroup results are descriptive with small support and unknown measurement uncertainty; no relabeling is justified.
 
 Mixed rendering, unrecorded camera tone processing, exposure/clipping and absent color-reference capture remain unresolved. Previous4B reviewed glare exclusions added no robust-model recall; no new evidence justified repeating glare experiments. Retain robust color-only as an exploratory candidate for genuinely new subjects and fixed acquisition/anatomical/operating policies. Source: [Experiment 6 report](../experiments/eyelid-exp06-results-2026-10-13.md) and its private source/verification bundle. No external or clinical validation follows.
+
+
+## Experiment 7 additions — 2026-10-14
+
+Normal-only fitting is distinct from anemia diagnosis. The tested robust18
+novelty distributions can flag capture/anatomical variation and miss mild or
+moderate anemia whose colors overlap normals. All local A85 models detect
+only4/19; Mahalanobis misses10/11 mild and5/6 moderate cases. The two severe
+cases cannot support a severity-specific claim. Training specificity targets
+are research rules and do not guarantee outer specificity or clinical
+acceptability. Label-assisted B must be identified separately from normal-only A.
+
+Public normal transfer has severe calibration shift: Eyes direct A85 flags
+all119 subjects, CP produces77 FP and combined produces75 FP. Local normal
+margin adaptation lowers FP but does not establish useful ranking/detection
+benefit. Public/manual ROI extent, resolution, intensity-selected strips,
+color capture, pediatric/adult distributions and source label policies differ.
+Shared18-feature functions and negative duplicate screens do not establish
+anatomical equivalence, true CP patient identity or domain independence.
+Original Eyes redistribution terms remain unverified; no dataset files were
+published. Missing individual public metadata prevents reliable subgroup claims.
+
+Score normalization and cutoffs use inner normal cross-fits; outer refits can
+shift score scale. Pooled raw rankings are descriptive. Candidate comparison,
+secondary nested selection and repeated119-subject research remain dependent
+exploration. Paired intervals condition on fixed OOF models/prevalence and
+exclude refitting/overlapping training uncertainty and multiple-comparison
+adjustments. Nineteen positives mean5.26pp per detection.
+
+Exposure/pose/hair-occlusion grades and standardized skin tone are unavailable.
+Brightness/clipping/area/aspect/glare proxies and rendering groups cannot
+prove causal failure modes or fairness. No ITA or skin-tone groups were added.
+A future study needs measured standardized acquisition/subgroups, frozen
+methods and independent positive/borderline subjects.
+
+A concurrent nail reset changed three workflow-table hashes; Experiment 7
+stopped before fitting, sealed v1, verified exact archived context and complete
+unchanged140-eyelid rows, and ran identical-feature v2 with strict guards.
+Future source changes still require provenance verification. Private artifacts
+are owner-local; no independent encrypted backup is verified. See
+[full limitations and results](../experiments/eyelid-exp07-results.md).

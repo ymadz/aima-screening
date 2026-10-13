@@ -1,7 +1,8 @@
 # AIMA implemented methodology
 
 This document describes what the repository actually implemented through
-2026-10-12. It separates implemented methods from proposals. The current
+2026-10-14, including the separately dated Experiment 5–7 additions below.
+It separates implemented methods from proposals. The current
 protocol manuscript is a research reference, not proof that a proposed step
 was implemented: `/Users/madz/Downloads/Research Protocol_Proposal with Cover Page.pdf`
 (SHA-256 recorded during the 2026-10-12 audit as
@@ -295,3 +296,42 @@ Cutoffs maximize inner sensitivity at specificity≥0.80(primary),0.85 or0.90, w
 Report pooled/fold confusion counts and all eight classification metrics. Wilson class-rate intervals and 2000 shared stratified conditional paired bootstrap draws (seed 20261011) omit refit, selection, overlapping-training dependence and prevalence uncertainty. Prediction overlap reports class-specific paired counts/correlations/agreement without claiming an optimized union. A label-preserving descriptive image audit checks geometry, private context thumbnails, registered originals/possible repeats, verified Hb severity and prior rendering/glare evidence. WHO2024 severity descriptions do not change the cohort labels; non-pregnancy remains owner-attested outside the Sheet. No anatomy edits or feature search follows.
 
 Implementation: `src/eyelid_ensemble.py`, `src/eyelid_ensemble_run.py`, `src/eyelid_information_audit.py`; exact copied code, model references, source hashes and reproduction instructions are in `data/processed/local_eyelid_classification_exp06_ensemble_v1/`. See [Experiment 6 report](../experiments/eyelid-exp06-results-2026-10-13.md).
+
+
+## Experiment 7 — implemented normal-only color novelty study (2026-10-14)
+
+The separately frozen [protocol](../experiments/eyelid-exp07-plan.md) uses the
+exact Exp4 original robust18 vectors and five local subject folds. Local
+standardization and detector fitting use only80 eligible outer-training
+normals. Six configurations are fixed:20%-shrinkage squared Mahalanobis,
+four RBF SVMs (nu.05/.10,gamma scale/.1), and256-tree Isolation Forest with
+max_samples64, all features, seed20261013. Higher scores always mean anomaly;
+SVM decision/Forest sample scores are negated. No new feature, imputation,
+ITA, mask edit, PCA or encoder training was introduced.
+
+Three seeded normal inner partitions cross-fit every calibration score.
+Policy A chooses the lowest cutoff attaining normal training specificity
+.80/.85/.90 (.85 primary). Policy B separately uses anemia/non-anemia inner
+training labels to maximize sensitivity under that constraint; anemia
+examples never enter fitting/scaling. A secondary B policy selects the six
+local candidates by inner AP with frozen tie order. Held-out labels are
+absent from fitting/selection APIs. Normal inner mean/std standardizes each
+fold's ranking score; raw-score decisions/ranking remain saved.
+
+B1/C1 fit91 Eyes/108 CP normal training-group means. B2/C2 retain public
+precision and replace margins using local training normals; B3/C3 equally
+weight public/local sources. D1 equally weights both public sources; D2
+adapts its margins. Every public track uses predefined Mahalanobis. Direct
+public A thresholds use three public normal group cross-fits; adapted/pooled
+A uses local normal cross-fits. B permits local training labels for cutoffs.
+Public validation is excluded throughout. Conservative source grouping,
+source hashes, ROI target and identical schema passed exploratory gates;
+public tissue strips/rendering/age/label policies are not assumed equivalent.
+
+All289 fitted models,87 outputs, train-only scopes/decisions and fresh119
+local vectors independently reproduce. Canonical workflow version changes
+from an unrelated nail reset are bridged only with exact archived hashes and
+full140-eyelid-row equality; every other source guard remains strict. The
+v1 stopped attempt and accepted v2 are separate sealed bundles. Exact commands,
+configurations, cutoffs, complexity/runtime, provenance and scope limits are
+in the [verified results](../experiments/eyelid-exp07-results.md).

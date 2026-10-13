@@ -30,6 +30,7 @@ REQUIRED_DOCS = {
     "thesis handoff": RESEARCH / "THESIS_HANDOFF.md",
     "documentation guide": RESEARCH / "RESEARCH_DOCUMENTATION_GUIDE.md",
     "research index": RESEARCH / "README.md",
+    "Experiment 7 report": ROOT / "docs/experiments/eyelid-exp07-results.md",
 }
 
 ARTIFACTS = {
@@ -99,6 +100,13 @@ ARTIFACTS = {
 }
 
 ARTIFACTS.update({
+    "AIMA-EXP07": (
+        "data/processed/local_eyelid_classification_exp07_one_class_v2/metrics.json",
+        "data/processed/local_eyelid_classification_exp07_one_class_v2/run_manifest.json",
+        "data/processed/local_eyelid_classification_exp07_one_class_v2/checksum_manifest.json",
+        "data/processed/exp07_verification_2026-10-14_v1/reproduction.json",
+        "data/processed/exp07_verification_2026-10-14_v1/public_transfer_vs_local_mahalanobis.json",
+    ),
     "AIMA-EXP06": (
         "data/processed/local_eyelid_classification_exp06_ensemble_v1/metrics.json",
         "data/processed/local_eyelid_classification_exp06_ensemble_v1/error_overlap.json",
@@ -145,6 +153,7 @@ def check_required_docs(errors: list[str]) -> int:
         "thesis handoff": "# AIMA thesis handoff",
         "documentation guide": "# Research documentation guide",
         "research index": "# AIMA research records",
+        "Experiment 7 report": "# Experiment 7: normal-only anemia novelty detection",
     }
     count = 0
     for name, path in REQUIRED_DOCS.items():
@@ -184,9 +193,10 @@ def check_artifacts(errors: list[str]) -> tuple[int, int]:
     checked = 0
     missing = 0
     for experiment_id, relative_paths in ARTIFACTS.items():
+        artifact_root = ROOT if experiment_id == "AIMA-EXP07" else ARTIFACT_ROOT
         for relative in relative_paths:
             checked += 1
-            if not (ARTIFACT_ROOT / relative).is_file():
+            if not (artifact_root / relative).is_file():
                 missing += 1
                 fail(errors, f"{experiment_id} missing artifact manifest: {relative}")
     return checked, missing
@@ -287,6 +297,46 @@ def check_metric_shapes(errors: list[str]) -> int:
     if proof6.get("status") != "reproduced_without_refitting" or proof6.get("models_reproduced") != 40:
         fail(errors, "Experiment6 reproduction evidence differs")
     checks += 1
+    exp7_root = ROOT / "data/processed/local_eyelid_classification_exp07_one_class_v2"
+    exp7 = json.loads((exp7_root / "metrics.json").read_text())
+    run7 = json.loads((exp7_root / "run_manifest.json").read_text())
+    proof7 = json.loads((ROOT / "data/processed/exp07_verification_2026-10-14_v1/reproduction.json").read_text())
+    if (run7.get("subjects"), run7.get("class_counts_0_1"), run7.get("models"),
+            run7.get("policy_outputs")) != (119, [100, 19], 289, 87):
+        fail(errors, "Experiment7 cohort/run counts differ")
+    if run7.get("source_commit") != "6513c9c2aeadc57e436ec55b292f362ff1316fa8":
+        fail(errors, "Experiment7 execution provenance differs")
+    if (proof7.get("status"), proof7.get("subjects"), proof7.get("models"),
+            proof7.get("policy_outputs"), proof7.get("fresh_local_features_exact")) != (
+            "reproduced_without_refitting", 119, 289, 87, True):
+        fail(errors, "Experiment7 independent reproduction evidence differs")
+    checks += 3
+    models7 = exp7.get("policies", {})
+    for key, expected in (("mahalanobis_A_085", [[87, 13], [15, 4]]),
+                          ("svm_010_scale_A_085", [[88, 12], [15, 4]]),
+                          ("nested_B_085", [[92, 8], [16, 3]]),
+                          ("B1_A_085", [[0, 100], [0, 19]]),
+                          ("B2_A_085", [[88, 12], [14, 5]]),
+                          ("C1_A_085", [[23, 77], [7, 12]]),
+                          ("D1_A_085", [[25, 75], [3, 16]]),
+                          ("exp04_robust", [[84, 16], [9, 10]])):
+        if models7.get(key, {}).get("confusion_matrix_labels_0_1") != expected:
+            fail(errors, f"Experiment7 aggregate evidence differs: {key}")
+        checks += 1
+    references7 = {"exp04_robust", "exp05_cp_C", "exp05_joint_primary", "exp06_equal_spec080"}
+    policy_keys = set(models7) - references7
+    if len(policy_keys) != 87:
+        fail(errors, "Experiment7 operating-policy coverage differs")
+    report = REQUIRED_DOCS["Experiment 7 report"].read_text()
+    for key in sorted(policy_keys):
+        row = models7[key]
+        counts = " / ".join(str(row[name]) for name in ("TP", "FP", "TN", "FN"))
+        line = (f"| {key} | {counts} | {100*row['sensitivity']:.1f}% | "
+                f"{100*row['specificity']:.1f}% | {row['roc_auc']:.6f} | "
+                f"{row['average_precision']:.6f} |")
+        if line not in report:
+            fail(errors, f"Experiment7 report transcription differs: {key}")
+        checks += 1
     return checks
 
 

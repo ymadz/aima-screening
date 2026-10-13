@@ -1,5 +1,8 @@
 # AIMA research log
 
+Latest completed study: Experiment 7, 2026-10-14. Earlier entries retain their
+dated implementation/results context.
+
 This is the thesis-oriented chronological record of research milestones. It
 extends the implementation-focused [`docs/core/PROJECT_LOG.md`](../core/PROJECT_LOG.md)
 without replacing it. The log records observed implementation and artifact
@@ -415,3 +418,43 @@ Audited both official CP releases; selected authenticated V2 (251 images,110/141
 - **Image findings:**119 masks structurally valid/single-component/no image-edge contact; inspected all 119 private context thumbnails. Variable tissue extent/orientation and hair/eyelash occlusion handling remain concerns. Five shared misses include3 mild/2 moderate. Exactly one verified eyelid original per subject;154 unassigned files cannot be assumed to be retakes. Mixed uncalibrated rendering/clipping persists;4B’s lack of recall benefit does not justify repeating glare fitting. No mask, label, image or inclusion change.
 - **Verification/artifacts:**109-file sealed private bundle `data/processed/local_eyelid_classification_exp06_ensemble_v1/`; independent40-pipeline/decision/prediction/metric/interval reproduction at`data/processed/exp06_verification_2026-10-13_v1/`.136 tests:133 passed/3 legacy-source skips; compileall and whitespace checks passed. Central six records updated and validated. Full tables/evidence: [Experiment 6 report](../experiments/eyelid-exp06-results-2026-10-13.md).
 - **Git/next step:** Protocol/helper commit `bc116af`; evaluator commit `f501039`; image-audit commit `23b04d6` and the documentation commit complete the authorized feature groups. Direct in-chat approval resolved the automatic reviewer’s attachment-authorization concern. Exact code snapshots and final commit receipt are preserved privately. No push. Prefer robust color-only for prespecified independent confirmation; do not expand ensemble training or optimize named misses on this cohort.
+
+
+## 2026-10-14 — Experiment 7 completed and independently reproduced
+
+**Question:** Can normal-only conjunctival color modeling improve detection
+with few anemia subjects? The owner requested preservation first, fixed
+robust18/folds, bounded local and public tracks, separate normal-only and
+label-assisted decisions, full reproduction and safe publication.
+
+**Preservation:** Exp1–6 and4B original validators passed;2,717 registered
+files across14 private historical directories matched. Verified unsynchronized
+branches were pushed after privacy/history review; main and unrelated worktree
+changes were untouched. Private archives remain on one volume, with no
+independent external encrypted backup verified. New branch starts at Exp6
+`3b74755`; protocol `340d3be` precedes fitting.
+
+**Observed result:** All six local A85 candidates detect4/19 at85–88%
+specificity, versus robust18's10/19 at84%. Mahalanobis AUC/AP0.537368/0.258772;
+SVM0.10/scale0.531579/0.344039. Secondary nested B85 detects3/19 at92%
+(AUC0.514737/AP0.252140). Eyes normal adaptation A85 detects5/19 at88%;
+direct public normal thresholds produce19TP/100FP Eyes,12TP/77FP CP,
+16TP/75FP combined. Local adaptation limits false flags but public normal
+examples do not establish improved discrimination. No winner was selected
+from outer results; optional PCA/neural representations were omitted.
+
+**Verification:** execution `6513c9c`;289 models/87 policy outputs, all
+inner/public scopes/statistics/calibrations/thresholds, held-out scores,
+matched references and metrics independently reproduce without fitting.
+All119 fresh local vectors match. Full151 tests:148 pass/three expected
+legacy-source skips; compilation and whitespace pass. v1 stopped before
+fitting when a separate nail reset changed three workflow tables. Exact old
+copies and complete140-row eyelid equality support a strict provenance
+bridge; accepted v2 has identical arrays and unchanged protocol.
+
+**Interpretation:** Negative exploratory evidence for the tested normal
+models;19 positives and repeated development data limit precision and
+independence. Robust color-only remains the practical candidate for a
+prespecified independent confirmation study. Fairness, graded QC and true CP
+patient identity remain unresolved. See [full report](../experiments/eyelid-exp07-results.md)
+and [dataset audit](../audits/eyelid-exp07-dataset-compatibility.md).

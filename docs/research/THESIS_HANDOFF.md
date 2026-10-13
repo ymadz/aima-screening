@@ -53,13 +53,18 @@ The initial continuous-Hb question was implemented as an optional Experiment4 an
 | Anemia / non-anemia | 19 / 100 | Exp1 `metrics.json` |
 | Missing-Hb exclusions | 20 | local cohort summary |
 | Age exclusion | 1 | local cohort summary |
-| Approved eyelid / nail ROI-mask pairs | 140 / 10 | current annotation manifest |
+| Approved eyelid / nail ROI-mask pairs at the 2026-10-12 snapshot | 140 / 10 | historical annotation manifest; see current reset note below |
 
 The local label rule is Hb strictly below 13.0 g/dL for males or 12.0 g/dL
 for non-pregnant females, applied to ages 15–65. Non-pregnancy is an owner
 attestation outside the Sheet. Missing nails do not remove an otherwise
 eligible eyelid record. See `METHODOLOGY.md` “Cohorts and eligibility” and
 `data/processed/local_cohort_who2024_2026-10-08/summary.json`.
+
+Current annotation context, 2026-10-14: a separate nail reset archived the
+ten earlier nail annotations;135 nail references are pending. All140 eyelid
+records remain approved and unchanged. This operational change does not alter
+the119-subject eyelid cohort or historical experiment results.
 
 ### Public data
 
@@ -315,3 +320,44 @@ No clinical/external validity follows. Candidate-level numerical differences are
 The image audit preserves all anatomy/labels and finds variable tissue extent, orientation and hair/eyelash occlusion handling. All119 masks are structurally valid; thumbnail review is not clinician validation. Five shared misses include3 mild and 2 moderate cases, contradicting an exclusively near-threshold explanation. One verified eyelid original per subject and 154 unassigned files do not support safe repeated-photo analysis. Mixed rendering/exposure/clipping persists;4B did not provide a recall gain and was not retrained. Use only aggregate figures in public thesis materials; private context sheets, prediction rows and the identity key remain excluded.
 
 Trace every value to `data/processed/local_eyelid_classification_exp06_ensemble_v1/` and its109-file checksum manifest, with independent evidence in`data/processed/exp06_verification_2026-10-13_v1/`. The six existing research records carry the update on the new6 branch; previous worktrees/main remain preserved. Clinical/generalization claims require a fixed protocol and genuinely new subjects, with stronger positive-case support.
+
+
+## Experiment 7 manuscript addition — verified 2026-10-14
+
+**Research motivation/method:** Test whether normal conjunctival color
+modeling addresses limited anemia support. This separate owner-requested
+study uses the exact original robust18 features/five subject folds, bounded
+shrinkage Mahalanobis/four SVMs/Isolation Forest and eight public Mahalanobis
+tracks. Fitting/scaling/adaptation use normals only. Separate normal-only A
+and label-assisted B cutoffs come from inner training cross-fits at.80/.85/.90;
+secondary nested B selects by inner AP. No outer outcome selects a winner.
+Use [methodology](METHODOLOGY.md) and the [frozen protocol](../experiments/eyelid-exp07-plan.md).
+
+**Results suitable for Chapter IV:** All six local A85 models detect4/19
+at85–88% specificity; preserved robust18 detects10/19 at84%. Mahalanobis
+AUC/AP0.537368/0.258772; SVM0.10/scale0.531579/0.344039. Nested B85 detects
+3/19 at92%,0.514737/0.252140. Eyes normal adaptation A85 detects5/19 at88%,
+0.541053/0.295872. Eyes direct public A flags119/119; CP direct12TP/77FP;
+combined16TP/75FP. These are failures of transfer calibration, not useful
+sensitivity gains. Full A/B/all-target tables, paired intervals and cutoffs
+are in [the verified report](../experiments/eyelid-exp07-results.md).
+
+**Interpretation suitable for Chapter V:** No evidence here that the tested
+normal-only methods improve anemia detection or that public normal support
+justifies complexity. Local normal adaptation mitigates false flags but does
+not approach robust color detection. The observed Mahalanobis AUC and SVM AP
+leaders are descriptive predefined candidates, not newly validated winners.
+Robust CIELAB remains the practical candidate for prespecified independent
+confirmation. Future research needs new positive/borderline subjects,
+standardized capture and measured QC/subgroups; further same-cohort searching
+is not independent evidence. No clinical or skin-tone fairness claim follows.
+
+**Traceability:** execution6513c9c;289 saved models/87 outputs and fresh119
+vectors independently reproduced; full151 tests148 pass/three expected skips.
+Private output `data/processed/local_eyelid_classification_exp07_one_class_v2/`
+is in the retained managed worktree, with separate independent proof. v1
+stopped before fitting after an unrelated nail reset; strict archived-hash and
+full-eyelid-equality checks support v2 without scientific design changes.
+Earlier experiments, masks, labels, folds and metrics remain intact. The
+current protocol PDF is reference material; it was not edited to imply that
+Experiment 7 had been part of the original proposal.
