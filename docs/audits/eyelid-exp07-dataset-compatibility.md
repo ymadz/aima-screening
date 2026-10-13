@@ -85,8 +85,9 @@ including every column, are exactly unchanged in each of the three tables.
 The reset's `manifests_before_reset/` copies match all three historical hashes.
 All 2,717 registered historical artifact files remain unchanged.
 
-The stopped preparation is sealed as v1. Accepted preparation/training will
-use a new v2. Historical Exp1 context is verified against those exact archived
+The stopped preparation is sealed as v1. Accepted preparation/training used
+a new v2 and independently reproduced. Historical Exp1 context is verified
+against those exact archived
 table bytes, with a mandatory 140-row full-field eyelid equality check; every
 other historical source/code hash must still match. Fresh current clinical,
 image, approval, mask and feature checks remain mandatory. New v2 pins the
