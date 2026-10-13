@@ -74,3 +74,22 @@ Unresolved limitations: true CP patient grouping, public ROI equivalence,
 uncalibrated mixed color capture, unavailable graded exposure/occlusion/pose
 metadata, standardized skin tone and independent local validation. These are
 reported limitations, not newly invented clinical or anatomical annotations.
+
+## 2026-10-14 source-workflow version bridge
+
+The first run stopped at its final source guard before fitting any model.
+A separate canonical nail reset changed the annotation manifest, image-ready
+inventory and anatomical review register. Current nail status is 135 pending;
+this change is outside Experiment 7's eyelid scope. All 140 eyelid rows,
+including every column, are exactly unchanged in each of the three tables.
+The reset's `manifests_before_reset/` copies match all three historical hashes.
+All 2,717 registered historical artifact files remain unchanged.
+
+The stopped preparation is sealed as v1. Accepted preparation/training will
+use a new v2. Historical Exp1 context is verified against those exact archived
+table bytes, with a mandatory 140-row full-field eyelid equality check; every
+other historical source/code hash must still match. Fresh current clinical,
+image, approval, mask and feature checks remain mandatory. New v2 pins the
+current workflow tables and archived originals. Neither historical verifiers
+nor another task's source files are modified. No model setting, cohort, label,
+mask, fold or threshold rule changed, and no outer result existed at this time.

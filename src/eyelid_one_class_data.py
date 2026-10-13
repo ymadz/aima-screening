@@ -19,10 +19,10 @@ from .eyelid_ensemble_run import EXP4, EXP5, checksum_guard
 from .eyelid_glare_prepare import validate_fresh_inputs
 from .eyelid_one_class import matrix
 from .eyelid_transfer_data import public_metadata
-from .local_eyelid_hybrid_features import validated_inputs
+from .local_eyelid_classifier import validate_feature_rows
 from .local_eyelid_validation import (load_manual_pair, perceptual_hash,
-    require_duplicate_clearance, sha256, source_snapshot, strict_csv)
-from .preserve_local_experiment import tree_checksums
+    audit_folds, checked_file, require_duplicate_clearance, sha256, source_snapshot, strict_csv)
+from .preserve_local_experiment import tree_checksums, verify_saved_cv
 from .public_segmentation_data import discover_public_pairs, load_public_pair
 
 EXP3 = "local_eyelid_classification_exp03_transfer_2026-10-11_v3"
@@ -32,6 +32,61 @@ OUTPUT_NAME = "local_eyelid_classification_exp07_one_class_v1"
 
 def write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, indent=2, allow_nan=False)+"\n")
+
+
+def archived_workflow_source(root: Path, path: Path, expected: str) -> Path:
+    """Resolve an intact historical table only after exact eyelid-row equality.
+
+    This is a narrowly scoped provenance bridge for the documented nail reset,
+    not permission to ignore changed clinical, image, ROI or model inputs.
+    """
+    parent = root/"data/raw/local/annotations"
+    names = {"annotation_manifest.csv", "image_ready_inventory.csv", "anatomical_review_register.csv"}
+    if path.parent != parent/"manifests" or path.name not in names:
+        raise ValueError("Unapproved historical source difference")
+    archive = parent/"provenance/nail_annotation_reset_2026-10-13/manifests_before_reset"/path.name
+    if not archive.is_file() or sha256(archive) != expected:
+        raise ValueError("Historical workflow snapshot is missing or damaged")
+    old, current = strict_csv(archive), strict_csv(path)
+    if list(old[0]) != list(current[0]) or "modality" not in old[0]:
+        raise ValueError("Workflow schema changed")
+    order = lambda rows: sorted([r for r in rows if r["modality"] == "eyelid"], key=lambda r: json.dumps(r, sort_keys=True))
+    a, b = order(old), order(current)
+    if len(a) != 140 or a != b:
+        raise ValueError("Eyelid rows changed; provenance bridge rejected")
+    return archive
+
+
+def current_validated_inputs(root: Path, output: Path) -> dict:
+    """Reproduce immutable Exp1; verify old context and fresh current eye inputs."""
+    experiment = root/"data/processed/local_eyelid_classification_2026-10-10_v1"
+    bundle = root/"data/processed/local_eyelid_readiness_2026-10-10_v2"
+    proof = verify_saved_cv(experiment, bundle)
+    config = json.loads((experiment/"experiment_config.json").read_text())
+    substitutions = []
+    for path, expected in {**config["source_files"], **config["code_sha256"]}.items():
+        original = Path(path)
+        if sha256(original) != expected:
+            archive = archived_workflow_source(root, original, expected)
+            substitutions.append({"original": str(original), "original_expected_sha256": expected,
+                "archived_exact_bytes": str(archive), "current_sha256": sha256(original),
+                "all_140_eyelid_rows_exactly_equal": True})
+    rows = strict_csv(bundle/"verified_eyelid_inputs.csv")
+    by_id = {r["subject_id"]: r for r in rows}; subjects = sorted(by_id)
+    labels = np.asarray([int(by_id[s]["derived_anemia_label"]) for s in subjects])
+    folds = strict_csv(experiment/"subject_folds.csv")
+    audit_folds(dict(zip(subjects, labels)), folds)
+    assignments = {r["subject_id"]: int(r["fold"]) for r in folds}
+    for row in rows:
+        for path_field, hash_field in [("source_image_path", "original_source_sha256"),
+                ("annotation_image_path", "annotation_image_sha256"), ("roi_path", "roi_sha256"),
+                ("mask_path", "mask_sha256"), ("source_review_package_path", "source_review_package_sha256")]:
+            checked_file(root, row[path_field], row[hash_field])
+    write_json(output/"historical_workflow_context.json", {"status": "verified_exact_archived_context_and_unchanged_eyelids",
+        "substitutions": substitutions, "baseline_saved_models": proof})
+    return {"subjects": subjects, "labels": labels, "folds": np.asarray([assignments[s] for s in subjects]),
+        "lab": validate_feature_rows(strict_csv(bundle/"features.csv"), subjects), "rows": by_id,
+        "historical_context_substitutions": substitutions}
 
 
 def normal_groups(x: np.ndarray, ids: list[str], labels: np.ndarray,
@@ -98,8 +153,7 @@ def prepare(root: Path, output: Path) -> dict:
     audit_dir.mkdir(mode=0o700)
     write_json(audit_dir/"canonical_snapshot_before_read.json", snapshot)
     summary, clinical, fresh = fresh_local(root, audit_dir)
-    data = validated_inputs(root, root/"data/processed/local_eyelid_classification_2026-10-10_v1",
-                            root/"data/processed/local_eyelid_readiness_2026-10-10_v2")
+    data = current_validated_inputs(root, audit_dir)
     validate_fresh_inputs({r["subject_id"]: r for r in fresh}, data)
     candidates = json.loads((audit_dir/"duplicate_candidates.json").read_text())
     review = strict_csv(root/"data/processed/local_eyelid_classification_2026-10-10_v1/duplicate_review_used.csv")
@@ -113,6 +167,8 @@ def prepare(root: Path, output: Path) -> dict:
         "duplicate_clearance": "existing hash-linked owner distinct-source decisions verified",
         "anatomical_approval": "owner boundary review, not clinician validation"})
     hashes = dict(summary["source_files"])
+    for context in data["historical_context_substitutions"]:
+        hashes[context["archived_exact_bytes"]] = context["original_expected_sha256"]
     inventory = root/"data/raw/local/manifest/frozen_2026-10-07/local_image_manifest.csv"
     hashes[str(inventory)] = sha256(inventory)
     registered = strict_csv(inventory)
